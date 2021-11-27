@@ -16,20 +16,13 @@ public class Radial : Force {
     public float radius;
 
     /* --- Override --- */
-    protected override List<Shuttle> Area() {
+    protected override Collider2D[] Area() {
 
-        // Instantiate a new list of shuttles.
-        List<Shuttle> shuttles = new List<Shuttle>();
-
-        // Find all the necessary shuttles.
+        // Find all the necessary colliders.
         Collider2D[] colliders = Physics2D.OverlapCircleAll((Vector2)transform.position, radius);
-        for (int i = 0; i < colliders.Length; i++) {
-            Shuttle shuttle = colliders[i].GetComponent<Shuttle>();
-            if (shuttle != null) { shuttles.Add(shuttle); }
-        }
 
-        // Return the list.
-        return shuttles;
+        // Return the array.
+        return colliders;
     }
 
 

@@ -8,12 +8,9 @@ public class Axial : Force
     public float length;
 
     /* --- Override --- */
-    protected override List<Shuttle> Area() {
+    protected override Collider2D[] Area() {
 
-        // Instantiate a new list of shuttles.
-        List<Shuttle> shuttles = new List<Shuttle>();
-
-        // Find all the necessary shuttles.
+        // Find all the necessary colliders.
         Collider2D[] vertical = Physics2D.OverlapBoxAll(transform.position, new Vector2(1f, length * 2f), 0f);
         Collider2D[] horizontal = Physics2D.OverlapBoxAll(transform.position, new Vector2(length * 2f, 1f), 0f);
 
@@ -21,13 +18,8 @@ public class Axial : Force
         vertical.CopyTo(colliders, 0);
         horizontal.CopyTo(colliders, vertical.Length);
 
-        for (int i = 0; i < colliders.Length; i++) {
-            Shuttle shuttle = colliders[i].GetComponent<Shuttle>();
-            if (shuttle != null) { shuttles.Add(shuttle); }
-        }
-
-        // Return the list.
-        return shuttles;
+        // Return the array.
+        return colliders;
     }
 
 

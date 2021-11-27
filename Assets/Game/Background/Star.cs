@@ -7,13 +7,13 @@ using UnityEngine;
 /// Trailing pixel that moves across the screen.
 /// </summary>
 [RequireComponent(typeof(SpriteRenderer))]
-public class StarUI : MonoBehaviour {
+public class Star : MonoBehaviour {
 
     /* --- Components --- */
     SpriteRenderer spriteRenderer;
 
     /* --- Properties --- */
-    private Vector2 direction;
+    public Vector2 direction;
     private float speed;
     private float acceleration;
 

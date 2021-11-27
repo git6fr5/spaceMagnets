@@ -38,7 +38,7 @@ public class GameRules : MonoBehaviour {
 
     public static bool IsEditing;
     // public bool isEditing;
-    public BackgroundUI background;
+    public Background background;
 
     void Update() {
 
