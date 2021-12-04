@@ -31,43 +31,10 @@ public class GameRules : MonoBehaviour {
     public static Color Blue = Color.blue;
     public static Color White = Color.white;
 
-
-    // Collect objects in game
-    // Set their outline colors
-    // Set their layers
-
+    /* --- Modes --- */
     public static bool IsEditing;
-    // public bool isEditing;
-    public Background background;
 
-    void Update() {
-
-        // IsEditing = isEditing;
-        if (IsEditing) {
-            background.spriteRenderer.color = Color.green;
-            Time.timeScale = 0f;
-        }
-        else {
-            background.spriteRenderer.color = Color.white;
-            Time.timeScale = 1f;
-        }
-
-        //if (Input.GetKeyDown(KeyCode.E)) {
-        //    isEditing = !isEditing;
-        //    Reset();
-        //}
-
-        //ForceUI[] forceUIs = (ForceUI[])GameObject.FindObjectsOfType(typeof(ForceUI));
-        //for (int i = 0; i < forceUIs.Length; i++) {
-        //    forceUIs[i].enabled = isEditing;
-        //}
-
-        //Spawner spawner = (Spawner)GameObject.FindObjectOfType<Spawner>();
-        //spawner.enabled = !isEditing;
-
-
-    }
-
+    /* --- Static Methods --- */
     public static void Reset() {
         ClearShuttles();
     }
@@ -75,8 +42,51 @@ public class GameRules : MonoBehaviour {
     private static void ClearShuttles() {
         Shuttle[] shuttles = (Shuttle[])GameObject.FindObjectsOfType(typeof(Shuttle));
         for (int i = 0; i < shuttles.Length; i++) {
-            Destroy(shuttles[i].gameObject);
+            shuttles[i].Explode();
         }
 
     }
+
+    public static bool IsWithinBounds(Transform transform) {
+
+        if (transform.position.x > PixelsHorizontal / (2f * PixelsPerUnit)) {
+            return false;
+        }
+        else if (transform.position.x < -PixelsHorizontal / (2f * PixelsPerUnit)) {
+            return false;
+        }
+
+        if (transform.position.y > PixelsVertical / (2f * PixelsPerUnit)) {
+            return false;
+        }
+        else if (transform.position.y < -PixelsVertical / (2f * PixelsPerUnit)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static void SnapWithinBounds(Transform transform) {
+
+        float x = transform.position.x;
+        float y = transform.position.y;
+
+        if (transform.position.x > PixelsHorizontal / (2f * PixelsPerUnit)) {
+            x = PixelsHorizontal / (2f * PixelsPerUnit);
+        }
+        else if (transform.position.x < -PixelsHorizontal / (2f * PixelsPerUnit)) {
+            x = -PixelsHorizontal / (2f * PixelsPerUnit);
+        }
+
+        if (transform.position.y > PixelsVertical / (2f * PixelsPerUnit)) {
+            y = PixelsVertical / (2f * PixelsPerUnit);
+        }
+        else if (transform.position.y < -PixelsVertical / (2f * PixelsPerUnit)) {
+            y = -PixelsVertical / (2f * PixelsPerUnit);
+        }
+
+        transform.position = new Vector2(x, y);
+
+    }
+
 }

@@ -10,10 +10,12 @@ using UnityEngine;
 /// <summary>
 /// 
 /// </summary>
+[RequireComponent(typeof(BoxCollider2D))];
 [RequireComponent(typeof(SpriteRenderer))]
 public class Spawner : MonoBehaviour {
 
     /* --- Components --- */
+    private BoxCollider2D hitbox;
     private SpriteRenderer spriteRenderer;
     public Shuttle shuttle;
     public Transform purpleArrow;
@@ -29,6 +31,7 @@ public class Spawner : MonoBehaviour {
     // Start is called before the first frame update
     private void Start() {
         // Cache these references.
+        hitbox = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         // Set up these components.
@@ -42,7 +45,7 @@ public class Spawner : MonoBehaviour {
     private void Update() {
 
         // Spawn a shuttle on the spawn key.
-        if (Input.GetKeyDown(spawnKey) && spawnTicks == 0f && !GameRules.IsEditing) {
+        if (Input.GetKeyDown(spawnKey) && spawnTicks == 0f) {
             Spawn();
         }
 

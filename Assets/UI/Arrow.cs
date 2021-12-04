@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class ArrowUI : MonoBehaviour {
+public class Arrow : MonoBehaviour {
 
     /* --- Static Properties --- */
     // Transparency

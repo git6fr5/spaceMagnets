@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7006942612442059055}
-  - component: {fileID: 7006942612442059054}
   m_Layer: 0
   m_Name: Outer Arm
   m_TagString: Untagged
@@ -39,19 +38,6 @@ Transform:
   m_Father: {fileID: 7006942613684967387}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
---- !u!114 &7006942612442059054
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7006942612442059024}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 215ad86bcd92b944f8a987cf19b64185, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  counterClockWise: 1
 --- !u!1 &7006942612562768832
 GameObject:
   m_ObjectHideFlags: 0
@@ -61,7 +47,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7006942612562768863}
-  - component: {fileID: 7006942612562768862}
   m_Layer: 0
   m_Name: Inner Arm
   m_TagString: Untagged
@@ -91,19 +76,6 @@ Transform:
   m_Father: {fileID: 7006942613684967387}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7006942612562768862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7006942612562768832}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 215ad86bcd92b944f8a987cf19b64185, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  counterClockWise: 0
 --- !u!1 &7006942612598573045
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,7 +961,6 @@ GameObject:
   - component: {fileID: 7006942613684967388}
   - component: {fileID: 7006942613684967389}
   - component: {fileID: 7006942613684967385}
-  - component: {fileID: 7006942613684967386}
   m_Layer: 0
   m_Name: Radial Push
   m_TagString: Untagged
@@ -1076,9 +1047,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3046bba72ad806748812aadfe50f15aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
   direction: -1
   magnitude: 15
   shuttles: []
+  sandBox: []
+  stars: []
+  isActive: 0
+  isMoving: 0
+  isOver: 0
   radius: 3
 --- !u!58 &7006942613684967385
 CircleCollider2D:
@@ -1096,21 +1073,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &7006942613684967386
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7006942613684967390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f80ff8bb1e4bfb84cbe8279367aa4781, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isActive: 0
-  isMoving: 0
-  isOver: 0
 --- !u!1 &7006942613688414718
 GameObject:
   m_ObjectHideFlags: 0

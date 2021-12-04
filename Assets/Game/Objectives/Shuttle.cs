@@ -7,13 +7,11 @@ using UnityEngine;
 /// 
 /// </summary>
 [RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CapsuleCollider2D))]
 public class Shuttle : MonoBehaviour {
 
     /* --- Components --- */
     private SpriteRenderer spriteRenderer;
-    private Rigidbody2D body;
     [HideInInspector] public CapsuleCollider2D hitbox;
 
     /* --- Properties --- */
@@ -22,30 +20,30 @@ public class Shuttle : MonoBehaviour {
     /* --- Unity --- */
     private void Start() {
         // Cache these references.
-        body = GetComponent<Rigidbody2D>();
         hitbox = GetComponent<CapsuleCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         // Set up these components.
-        body.constraints = RigidbodyConstraints2D.FreezeRotation;
-        body.gravityScale = 0f;
-        body.angularDrag = 0f;
         hitbox.isTrigger = true;
         spriteRenderer.sortingLayerName = GameRules.Midground;
     }
 
     private void Update() {
-        Velocity();
+
+        if (!GameRules.IsWithinBounds(transform)) {
+            Explode();
+        }
+
+    }
+
+    private void FixedUpdate() {
+        Move();
         Point();
     }
 
-    private void Velocity() {
-        body.velocity = velocity;
-
-        // Set the material parameters.
-        spriteRenderer.material.SetFloat("_Speed", velocity.magnitude);
-        spriteRenderer.material.SetFloat("_DirectionX", velocity.normalized.x);
-        spriteRenderer.material.SetFloat("_DirectionY", velocity.normalized.y);
+    private void Move() {
+        Vector2 deltaPosition = velocity * Time.fixedDeltaTime;
+        transform.position += (Vector3)(deltaPosition);
     }
 
     /* --- Methods --- */
@@ -63,6 +61,14 @@ public class Shuttle : MonoBehaviour {
         transform.eulerAngles = Vector3.forward * angle + flip* Vector3.up * 180f;
     }
 
+    public void Explode() {
+
+        // Play an animation.
+
+        // Self-destruct
+        Destroy(gameObject);
+
+    }
 
     /* --- Editor --- */
     private void OnDrawGizmos() {

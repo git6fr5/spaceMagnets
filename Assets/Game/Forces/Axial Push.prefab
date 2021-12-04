@@ -529,7 +529,6 @@ GameObject:
   - component: {fileID: 8367278152300594859}
   - component: {fileID: 8367278152300594868}
   - component: {fileID: 8367278152300594856}
-  - component: {fileID: 8367278152300594857}
   m_Layer: 0
   m_Name: Axial Push
   m_TagString: Untagged
@@ -618,9 +617,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f14071c1f9cc0c148b9c690a33648332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
   direction: -1
   magnitude: 50
   shuttles: []
+  sandBox: []
+  stars: []
+  isActive: 0
+  isMoving: 0
+  isOver: 0
   length: 3
 --- !u!58 &8367278152300594856
 CircleCollider2D:
@@ -638,21 +643,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &8367278152300594857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8367278152300594869}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f80ff8bb1e4bfb84cbe8279367aa4781, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isActive: 0
-  isMoving: 0
-  isOver: 0
 --- !u!1 &8367278152466857781
 GameObject:
   m_ObjectHideFlags: 0

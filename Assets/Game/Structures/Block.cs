@@ -25,6 +25,7 @@ public class Block : MonoBehaviour {
     }
 
     void OnTriggerEnter2D(Collider2D collider) {
+        print("Hello");
         CheckBounce(collider);
     }
 
@@ -32,12 +33,14 @@ public class Block : MonoBehaviour {
     public Vector2 normalVector;
 
     private void CheckBounce(Collider2D collider) {
+
         Shuttle shuttle = collider.GetComponent<Shuttle>();
         if (shuttle != null) {
             print("Getting Normal");
             normalVector = GetNormal((Vector2)shuttle.transform.position);
             Bounce(shuttle, normalVector);
         }
+
     }
 
     private Vector2 GetNormal(Vector2 position) {

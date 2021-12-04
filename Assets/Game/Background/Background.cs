@@ -16,8 +16,8 @@ public class Background : MonoBehaviour {
 
     /* --- Properties --- */
     [Space(5)] [Header("Sand Grid")]
-    [SerializeField] [Range(10, 100)] private int verticalPrecision = 5;
-    [SerializeField] [Range(10, 100)] private int horizontalPrecision = 5;
+    [SerializeField] [Range(0, 100)] private int verticalPrecision = 5;
+    [SerializeField] [Range(0, 100)] private int horizontalPrecision = 5;
     [Space(5)] [Header("Shooting Stars")]
     [SerializeField] [Range(1, 10)] private int batchSize = 5;
     [SerializeField] [Range(0.05f, 2f)] private float fireRate = 1f;
@@ -31,6 +31,17 @@ public class Background : MonoBehaviour {
 
         // Sand grid
         SandGrid();
+    }
+
+    private void Update() {
+        if (GameRules.IsEditing) {
+            spriteRenderer.color = Color.green;
+            Time.timeScale = 0.5f; // Should I be doing this here?
+        }
+        else {
+            spriteRenderer.color = Color.white;
+            Time.timeScale = 1f;
+        }
     }
 
     /* --- Methods --- */

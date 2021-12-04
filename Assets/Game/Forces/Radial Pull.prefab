@@ -688,7 +688,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6788901490414136792}
-  - component: {fileID: 6788901490414136795}
   m_Layer: 0
   m_Name: Outer Arm
   m_TagString: Untagged
@@ -718,19 +717,6 @@ Transform:
   m_Father: {fileID: 6788901490870987338}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
---- !u!114 &6788901490414136795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6788901490414136793}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 215ad86bcd92b944f8a987cf19b64185, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  counterClockWise: 1
 --- !u!1 &6788901490474559548
 GameObject:
   m_ObjectHideFlags: 0
@@ -937,7 +923,6 @@ GameObject:
   - component: {fileID: 6788901490870987339}
   - component: {fileID: 6788901490870987336}
   - component: {fileID: 6788901490870987340}
-  - component: {fileID: 6788901490870987341}
   m_Layer: 0
   m_Name: Radial Pull
   m_TagString: Untagged
@@ -1024,9 +1009,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3046bba72ad806748812aadfe50f15aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
   direction: 1
   magnitude: 15
   shuttles: []
+  sandBox: []
+  stars: []
+  isActive: 0
+  isMoving: 0
+  isOver: 0
   radius: 3
 --- !u!58 &6788901490870987340
 CircleCollider2D:
@@ -1044,21 +1035,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &6788901490870987341
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6788901490870987337}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f80ff8bb1e4bfb84cbe8279367aa4781, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isActive: 0
-  isMoving: 0
-  isOver: 0
 --- !u!1 &6788901490961159700
 GameObject:
   m_ObjectHideFlags: 0
@@ -1456,7 +1432,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6788901491480451832}
-  - component: {fileID: 6788901491480451835}
   m_Layer: 0
   m_Name: Inner Arm
   m_TagString: Untagged
@@ -1486,19 +1461,6 @@ Transform:
   m_Father: {fileID: 6788901490870987338}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6788901491480451835
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6788901491480451833}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 215ad86bcd92b944f8a987cf19b64185, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  counterClockWise: 0
 --- !u!1 &6788901491590698858
 GameObject:
   m_ObjectHideFlags: 0
