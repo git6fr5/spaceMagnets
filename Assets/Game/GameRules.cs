@@ -31,22 +31,7 @@ public class GameRules : MonoBehaviour {
     public static Color Blue = Color.blue;
     public static Color White = Color.white;
 
-    /* --- Modes --- */
-    public static bool IsEditing;
-
-    /* --- Static Methods --- */
-    public static void Reset() {
-        ClearShuttles();
-    }
-
-    private static void ClearShuttles() {
-        Shuttle[] shuttles = (Shuttle[])GameObject.FindObjectsOfType(typeof(Shuttle));
-        for (int i = 0; i < shuttles.Length; i++) {
-            shuttles[i].Explode();
-        }
-
-    }
-
+    /* --- Bounds --- */
     public static bool IsWithinBounds(Transform transform) {
 
         if (transform.position.x > PixelsHorizontal / (2f * PixelsPerUnit)) {

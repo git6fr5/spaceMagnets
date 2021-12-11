@@ -10,7 +10,7 @@ using UnityEngine;
 /// <summary>
 /// 
 /// </summary>
-[RequireComponent(typeof(BoxCollider2D))];
+[RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(SpriteRenderer))]
 public class Spawner : MonoBehaviour {
 
@@ -24,8 +24,7 @@ public class Spawner : MonoBehaviour {
     private Vector2 direction;
     public float speed;
     public float spawnInterval;
-    private float spawnTicks = 0f;
-    private KeyCode spawnKey = KeyCode.Space;
+    public float spawnTicks = 0f;
 
     /* --- Unity --- */
     // Start is called before the first frame update
@@ -44,11 +43,6 @@ public class Spawner : MonoBehaviour {
     // Update is called once per frame
     private void Update() {
 
-        // Spawn a shuttle on the spawn key.
-        if (Input.GetKeyDown(spawnKey) && spawnTicks == 0f) {
-            Spawn();
-        }
-
         // Increment the spawn cooldown.
         if (spawnTicks > 0f) {
             spawnTicks -= Time.deltaTime;
@@ -56,10 +50,11 @@ public class Spawner : MonoBehaviour {
         else {
             spawnTicks = 0f;
         }
+
     }
 
     /* --- Methods --- */
-    private void Spawn() {
+    public void Spawn() {
         // Instantiate the shuttle.
         Shuttle nextShuttle = Instantiate(shuttle, transform.position + (Vector3)direction / 2f, Quaternion.identity, null);
 
