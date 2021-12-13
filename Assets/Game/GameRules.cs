@@ -8,6 +8,9 @@ using UnityEngine;
 /// </summary>
 public class GameRules : MonoBehaviour {
 
+    /* --- Physics --- */
+    public static float MovementPrecision = 0.05f;
+
     /* --- Path --- */
     public static string Path = "Assets/Resources/";
 

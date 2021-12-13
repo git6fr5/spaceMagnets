@@ -6,34 +6,34 @@ using UnityEngine;
 /// <summary>
 /// 
 /// </summary>
-[RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(BoxCollider2D))]
-public class Spike : MonoBehaviour {
+[RequireComponent(typeof(CircleCollider2D))]
+public class Score : MonoBehaviour {
 
     /* --- Components --- */
-    private SpriteRenderer spriteRenderer;
-    private BoxCollider2D hitbox;
+    [HideInInspector] public CircleCollider2D hitbox;
+
+    /* --- Properties --- */
+    [HideInInspector] public int value = 0;
 
     /* --- Unity --- */
     private void Start() {
         // Cache these references.
-        hitbox = GetComponent<BoxCollider2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        hitbox = GetComponent<CircleCollider2D>();
 
         // Set up these components.
         hitbox.isTrigger = true;
-        spriteRenderer.sortingLayerName = GameRules.Midground;
     }
 
-    void OnTriggerEnter2D(Collider2D collider) {
-        CheckDeath(collider);
+    void OnTriggerStay2D(Collider2D collider) {
+        CheckScore(collider);
     }
 
     /* --- Methods --- */
-    private void CheckDeath(Collider2D collider) {
+    private static void CheckScore(Collider2D collider) {
         Shuttle shuttle = collider.GetComponent<Shuttle>();
         if (shuttle != null) {
             print("Died");
+            // Add the score
             Destroy(shuttle.gameObject);
         }
     }

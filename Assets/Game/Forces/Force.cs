@@ -27,6 +27,7 @@ public class Force : MonoBehaviour {
     [SerializeField] private List<Sand> sandBox;
     [SerializeField] private List<Star> stars;
     // State Variables
+    public bool isInteractable = false;
     public bool isActive = false;
     public bool isMoving = false;
     public bool isOver = false;
@@ -40,14 +41,19 @@ public class Force : MonoBehaviour {
 
     // Runs once per frame.
     private void Update() {
+        if (isInteractable) {
+            Interact();
+        }
+    }
 
+    private void Interact() {
         // Moving
         if (isOver && Input.GetMouseButtonDown(0)) {
             GameRules.IsEditing = true;
             isMoving = true;
         }
         if (Input.GetMouseButtonUp(0)) {
-            GameRules.Reset();
+            // GameRules.Reset();
             GameRules.IsEditing = false;
             isMoving = false;
         }
@@ -132,10 +138,11 @@ public class Force : MonoBehaviour {
         float sqrDistance = (transform.position - shuttle.transform.position).sqrMagnitude;
         Vector2 forceDirection = (transform.position - shuttle.transform.position).normalized;
         // Apply the force (as long as we're not inside the actual object).
-        if (sqrDistance > 1f) {
+        if (sqrDistance > hitbox.radius * hitbox.radius) {
             Vector2 acceleration = (int)direction * magnitude * forceDirection / sqrDistance;
             Vector2 deltaAcceleration = Time.fixedDeltaTime * acceleration;
             shuttle.velocity += deltaAcceleration;
+            print("Applying Force");
         }
     }
 
@@ -144,7 +151,7 @@ public class Force : MonoBehaviour {
         float sqrDistance = (transform.position - sand.transform.position).sqrMagnitude;
         Vector2 forceDirection = (transform.position - sand.transform.position).normalized;
         // Apply the force (as long as we're not inside the actual object).
-        if (sqrDistance > 0.5f) {
+        if (sqrDistance > hitbox.radius * hitbox.radius) {
             Vector2 acceleration = (int)direction * magnitude * forceDirection / sqrDistance;
             Vector2 deltaAcceleration = Time.fixedDeltaTime * acceleration;
             sand.velocity += deltaAcceleration;

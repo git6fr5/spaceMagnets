@@ -9,6 +9,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CapsuleCollider2D))]
+[RequireComponent(typeof(ScoreCollector))]
 public class Shuttle : MonoBehaviour {
 
     /* --- Components --- */
@@ -18,6 +19,10 @@ public class Shuttle : MonoBehaviour {
 
     /* --- Properties --- */
     public Vector2 velocity;
+    public float maxSpeed = 5f;
+    [Space(5), Header("Controls")]
+    public bool isControllable = false;
+    public float controlSpeed = 2f;
 
     /* --- Unity --- */
     private void Start() {
@@ -36,19 +41,17 @@ public class Shuttle : MonoBehaviour {
 
     private void Update() {
         Velocity();
-        Point();
-    }
-
-    private void Velocity() {
-        body.velocity = velocity;
-
-        // Set the material parameters.
-        spriteRenderer.material.SetFloat("_Speed", velocity.magnitude);
-        spriteRenderer.material.SetFloat("_DirectionX", velocity.normalized.x);
-        spriteRenderer.material.SetFloat("_DirectionY", velocity.normalized.y);
+        // Point();
+        if (isControllable) {
+            Control();
+        }
     }
 
     /* --- Methods --- */
+    private void Velocity() {
+        body.velocity = Vector2.ClampMagnitude(velocity, maxSpeed);
+    }
+
     private void Point() {
 
         // Get the angle.
@@ -60,7 +63,11 @@ public class Shuttle : MonoBehaviour {
         if (velocity.x <= 0) { angle = -angle; flip = 1; }
 
         // Set the direction.
-        transform.eulerAngles = Vector3.forward * angle + flip* Vector3.up * 180f;
+        transform.eulerAngles = Vector3.forward * angle + flip * Vector3.up * 180f;
+    }
+
+    private void Control() {
+        velocity += new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * Time.deltaTime * controlSpeed;
     }
 
 
