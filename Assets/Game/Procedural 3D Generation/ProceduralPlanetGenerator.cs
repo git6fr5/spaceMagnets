@@ -5,23 +5,39 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 public class ProceduralPlanetGenerator : MonoBehaviour {
-    //Used to build a new planet on the fly
-    public bool rebuild = false;
+
+    /* --- Enumeration --- */
+    public enum TextureType {
+        Input,
+        Perlin
+    }
+
+    public enum RefreshType {
+        Static,
+        Increment,
+        Random,
+        Explode,
+        Implode
+    }
 
     //Local arrays for keeping track of our mesh data
     private Vector3[] m_vertices;
     private int[] m_triangles;
     private Color[] m_colors;
-    private float radius = 0.5f;
+
+    // Properties
+    public string planetName;
+    public float radius = 0.5f;
+    public float seaLevel = .4f;
+    public float heightRange = 0.1f;
+    [Range(0, 8)] public int subdivisions;
 
     //Height/Noise mapping settings
     [Space(5), Header("Height Map Settings")]
-    public bool useTexture;
+    public TextureType textureType;
+
     public Texture2D texture;
-    public float perlinScale = 20f;
-    public float seaLevel = .4f;
-    public float maxHeight = 0.1f;
-    public bool explode;
+    [Range(3f, 12.5f)] public float perlinScale = 12.5f;
 
     //Color mapping settings
     [Space(5), Header("Color Map Settings")]
@@ -29,11 +45,23 @@ public class ProceduralPlanetGenerator : MonoBehaviour {
     public Gradient landGradient;
 
     /* --- Properties --- */
-    [SerializeField] public Vector2 inputVectorSeed;
-    [SerializeField] public bool next;
-    [SerializeField] public bool chunkyAnimatedSurface = false;
-    [SerializeField] public bool smoothAnimatedSurface = false;
-    [SerializeField] public int subdivisions;
+
+    [Space(5), Header("Refresh Settings")]
+    public RefreshType refreshType;
+    private Coroutine rebuildRoutine = null;
+    public Vector2 vectorSeed;
+    public bool autoRebuild = false;
+    public bool nextFrame = false;
+    [Space(2), Header("Animation Settings")]
+    [Range(3, 60)] public int animationFrameRate = 24;
+    [Space(2), Header("Perlin Offset Increment Settings")]
+    [Range(0.01f, 1f)] public float incrementPerFrame = 0.01f;
+    [Space(2), Header("Explosion Settings")]
+    [Range(1f, 5f)] public float implosionSpeed = 0.05f;
+    [SerializeField] private float implodeHeight = 0;
+    [Space(2), Header("Implosion Settings")]
+    [Range(1f, 5f)] public float explosionSpeed = 0.05f;
+    [SerializeField] private float explodeHeight = 0;
 
     // Rotation
     [Range(0f, 1000f)] public float rotationSpeed;
@@ -50,37 +78,32 @@ public class ProceduralPlanetGenerator : MonoBehaviour {
 
     private void Start() {
         BuildPlanet();
-        if (chunkyAnimatedSurface) {
-            StartCoroutine(IERebuild(0.2f));
-        }
-
         internalEulerAngle = transform.eulerAngles;
     }
 
     private void Update() {
 
-        if (next) {
-            chunkyAnimatedSurface = false;
-            smoothAnimatedSurface = false;
-            inputVectorSeed += new Vector2(1f, 1f);
+        if (nextFrame) {
             BuildPlanet();
-            next = false;
+            nextFrame = false;
+        }
+        if (autoRebuild && rebuildRoutine == null) {
+            rebuildRoutine = StartCoroutine(IERebuild(1f / (float)animationFrameRate));
         }
 
-        if (explode) {
-            maxHeight -= 3 * Time.deltaTime;
-            BuildPlanet();
+        if (refreshType == RefreshType.Explode) {
+            explodeHeight -= explosionSpeed * Time.deltaTime;
+        }
+        else {
+            explodeHeight = 0f;
         }
 
-        if (smoothAnimatedSurface) {
-            inputVectorSeed += new Vector2(0.01f, 0.01f);
-            BuildPlanet();
+        if (refreshType == RefreshType.Implode) {
+            implodeHeight -= implosionSpeed * Time.deltaTime;
         }
-
-        //if (rebuild) {
-        //    BuildPlanet();
-        //    rebuild = false;
-        //}
+        else {
+            implodeHeight = 0f;
+        }
 
         Rotate();
     }
@@ -97,14 +120,23 @@ public class ProceduralPlanetGenerator : MonoBehaviour {
     private IEnumerator IERebuild(float delay) {
 
         yield return new WaitForSeconds(delay);
+
         BuildPlanet();
-        StartCoroutine(IERebuild(0.2f));
+
+        if (autoRebuild && rebuildRoutine == null) {
+            rebuildRoutine = StartCoroutine(IERebuild(1f / (float)animationFrameRate));
+        }
+        else {
+            rebuildRoutine = null;
+        }
+
         yield return null;
 
     }
 
     /* --- Methods --- */
     public void BuildPlanet() {
+
         BuildCube();
 
         for (int i = 0; i < subdivisions; i++) {
@@ -118,15 +150,11 @@ public class ProceduralPlanetGenerator : MonoBehaviour {
         RenderToMesh();
     }
 
-    /// <summary>
-    /// This is where the magic happens
-    /// For each Vertex, we project a 3d point into 2d using Latitude/Longitude
-    /// Then we map this to perlin noise, give height and color to the surface
-    /// </summary>
     private void HeightMap() {
         if (m_colors == null || m_colors.Length != m_vertices.Length) {
             m_colors = new Color[m_vertices.Length];
         }
+
         Vector2 offset = GetSeed();
 
         for (int i = 0; i < m_vertices.Length; i++) {
@@ -137,28 +165,22 @@ public class ProceduralPlanetGenerator : MonoBehaviour {
             Vector2 uv = latLong.GetUV();
 
             //Sample the perlin noise
-            float t = 0;
-            if (useTexture && texture != null) {
-                t = texture.GetPixel((int)((offset.x + uv.x) * texture.width) % texture.width, (int)((offset.y + uv.y) * texture.height) % texture.height).r;
-            }
-            else {
-                t = Mathf.PerlinNoise((offset.x + uv.x) * perlinScale, (offset.y + uv.y) * perlinScale);
-            }
+            float height = GetHeight(offset, uv);
 
             //Find the new distance from center for this variable
-            float newDist = radius + Mathf.Lerp(0f, maxHeight, t);
+            float newDist = radius + Mathf.Lerp(0f, heightRange + implodeHeight, height);
 
-            Color c = Color.Lerp(Color.black, Color.white, t);
-            if (t <= seaLevel) {
+            Color c = Color.Lerp(Color.black, Color.white, height);
+            if (height <= seaLevel) {
                 //If this vertex is at sea level, ensure it is level with all other water
                 //Also modulate this distance against our maxHeight (as a factor of planetary radius)
-                float landDepth = (seaLevel - t) / (1f - seaLevel);
-                newDist = radius + (seaLevel * maxHeight * radius);
+                float landDepth = (seaLevel - height) / (1f - seaLevel);
+                newDist = radius + (seaLevel * (heightRange - explodeHeight + implodeHeight) * radius);
                 c = waterGradient.Evaluate(landDepth);
             }
             else {
                 //If this vertex is above sea level, map our height (between sea level and 1f) to a gradient
-                float landLevel = (t - seaLevel) / (1f - seaLevel);
+                float landLevel = (height - seaLevel) / (1f - seaLevel);
                 c = landGradient.Evaluate(landLevel);
             }
 
@@ -168,14 +190,28 @@ public class ProceduralPlanetGenerator : MonoBehaviour {
         }
     }
 
+    private float GetHeight(Vector2 offset, Vector2 uv) {
+        float height = 0;
+        if (textureType == TextureType.Input && texture != null) {
+            height = texture.GetPixel((int)((offset.x + uv.x) * texture.width) % texture.width, (int)((offset.y + uv.y) * texture.height) % texture.height).r;
+        }
+        else if (textureType == TextureType.Perlin) {
+            height = Mathf.PerlinNoise((offset.x + uv.x) * perlinScale, (offset.y + uv.y) * perlinScale);
+        }
+        return height;
+    }
+
     private Vector2 GetSeed() {
 
-        if (chunkyAnimatedSurface) {
+        if (refreshType == RefreshType.Increment) {
+            vectorSeed += new Vector2(1f, 1f) * incrementPerFrame;
+        }
+        else if (refreshType == RefreshType.Random) {
             //Assign a random offset to our noise for some variety 
             return new Vector2(Random.Range(0, 100000), Random.Range(0, 100000));
         }
 
-        return inputVectorSeed;
+        return vectorSeed;
         
     }
 
@@ -332,6 +368,18 @@ public class ProceduralPlanetGenerator : MonoBehaviour {
         m_triangles[33] = 4;
         m_triangles[34] = 6;
         m_triangles[35] = 7;
+    }
+
+    /* --- IO --- */
+    public void Save() {
+
+        PlanetGeneratorSettings settings = new PlanetGeneratorSettings(this);
+        settings.Save();
+
+    }
+
+    public void Load() {
+        PlanetGeneratorSettings.Load(this);
     }
 
 }

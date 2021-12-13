@@ -1905,6 +1905,7 @@ GameObject:
   - component: {fileID: 1462064051}
   - component: {fileID: 1462064050}
   - component: {fileID: 1462064049}
+  - component: {fileID: 1462064054}
   m_Layer: 0
   m_Name: Wormhole A
   m_TagString: Untagged
@@ -2022,6 +2023,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1462064054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462064048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 448fe1c3649a0ba41b33567d50f0da97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInteractable: 1
+  isMoving: 0
+  isOver: 0
 --- !u!1 &1566252148
 GameObject:
   m_ObjectHideFlags: 0
@@ -3066,6 +3082,7 @@ GameObject:
   - component: {fileID: 2071510353}
   - component: {fileID: 2071510352}
   - component: {fileID: 2071510351}
+  - component: {fileID: 2071510356}
   m_Layer: 0
   m_Name: Wormhole B
   m_TagString: Untagged
@@ -3183,3 +3200,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2071510356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2071510350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 448fe1c3649a0ba41b33567d50f0da97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInteractable: 1
+  isMoving: 0
+  isOver: 0
