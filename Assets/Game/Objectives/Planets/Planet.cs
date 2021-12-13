@@ -38,13 +38,27 @@ public class Planet : MonoBehaviour {
         SetForceField();
     }
 
+    void OnTriggerStay2D(Collider2D collider) {
+        CheckDeath(collider);
+    }
+
+
     /* --- Methods --- */
     private void SetForceField() {
         forceField.isActive = true;
-        forceField.isInteractable = false;
         forceField.direction = Force.Direction.Pull;
         forceField.magnitude = mass;
         forceField.radius = Mathf.Sqrt(mass);
+    }
+
+    /* --- Methods --- */
+    private void CheckDeath(Collider2D collider) {
+        Shuttle shuttle = collider.GetComponent<Shuttle>();
+        if (shuttle != null) {
+            print("Died");
+            // Add the score
+            Destroy(shuttle.gameObject);
+        }
     }
 
 }

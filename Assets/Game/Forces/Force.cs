@@ -27,49 +27,13 @@ public class Force : MonoBehaviour {
     [SerializeField] private List<Sand> sandBox;
     [SerializeField] private List<Star> stars;
     // State Variables
-    public bool isInteractable = false;
     public bool isActive = false;
-    public bool isMoving = false;
-    public bool isOver = false;
 
     /* --- Unity --- */
     // Runs once before the first frame.
     private void Start() {
         hitbox = GetComponent<CircleCollider2D>();
         hitbox.isTrigger = true;
-    }
-
-    // Runs once per frame.
-    private void Update() {
-        if (isInteractable) {
-            Interact();
-        }
-    }
-
-    private void Interact() {
-        // Moving
-        if (isOver && Input.GetMouseButtonDown(0)) {
-            GameRules.IsEditing = true;
-            isMoving = true;
-        }
-        if (Input.GetMouseButtonUp(0)) {
-            // GameRules.Reset();
-            GameRules.IsEditing = false;
-            isMoving = false;
-        }
-
-        hitbox.enabled = !isMoving;
-        if (isMoving && GameRules.IsEditing) {
-            transform.position = (Vector3)(Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0f, 0f, transform.position.z);
-            ScreenBounds();
-        }
-
-
-        // Activating
-        if (isOver && Input.GetMouseButtonDown(1)) {
-            GameRules.Reset();
-            isActive = !isActive;
-        }
     }
 
     // Runs once every frame.
@@ -82,14 +46,6 @@ public class Force : MonoBehaviour {
             ApplyForces();
         }
 
-    }
-
-    private void OnMouseOver() {
-        isOver = true;
-    }
-
-    private void OnMouseExit() {
-        isOver = false;
     }
 
     /* --- Methods --- */
@@ -170,29 +126,6 @@ public class Force : MonoBehaviour {
             Vector2 deltaAcceleration = Time.fixedDeltaTime * acceleration;
             star.direction += deltaAcceleration;
         }
-    }
-
-    private void ScreenBounds() {
-
-        float x = transform.position.x;
-        float y = transform.position.y;
-
-        if (transform.position.x > GameRules.PixelsHorizontal / (2f * GameRules.PixelsPerUnit)) {
-            x = GameRules.PixelsHorizontal / (2f * GameRules.PixelsPerUnit);
-        }
-        else if (transform.position.x < -GameRules.PixelsHorizontal / (2f * GameRules.PixelsPerUnit)) {
-            x = -GameRules.PixelsHorizontal / (2f * GameRules.PixelsPerUnit);
-        }
-
-        if (transform.position.y > GameRules.PixelsVertical / (2f * GameRules.PixelsPerUnit)) {
-            y = GameRules.PixelsVertical / (2f * GameRules.PixelsPerUnit);
-        }
-        else if (transform.position.y < -GameRules.PixelsVertical / (2f * GameRules.PixelsPerUnit)) {
-            y = -GameRules.PixelsVertical / (2f * GameRules.PixelsPerUnit);
-        }
-
-        transform.position = new Vector2(x, y);
-
     }
 
     /* --- Virtual --- */

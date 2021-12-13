@@ -8,15 +8,15 @@ public class Level : MonoBehaviour {
 
     void Start() {
 
-        StartCoroutine(DelayedStart());
+        //StartCoroutine(DelayedStart());
 
-        IEnumerator DelayedStart() {
-            yield return new WaitForSeconds(0);
-            Spawner spawner = (Spawner)GameObject.FindObjectOfType(typeof(Spawner));
-            print(spawner);
-            spawner.SetPurpleArrow(spawnDirection.position);
-            yield return null;
-        }
+        //IEnumerator DelayedStart() {
+        //    yield return new WaitForSeconds(0);
+        //    Spawner spawner = (Spawner)GameObject.FindObjectOfType(typeof(Spawner));
+        //    print(spawner);
+        //    spawner.SetPurpleArrow(spawnDirection.position);
+        //    yield return null;
+        //}
         
 
     }

@@ -24,18 +24,4 @@ public class Score : MonoBehaviour {
         hitbox.isTrigger = true;
     }
 
-    void OnTriggerStay2D(Collider2D collider) {
-        CheckScore(collider);
-    }
-
-    /* --- Methods --- */
-    private static void CheckScore(Collider2D collider) {
-        Shuttle shuttle = collider.GetComponent<Shuttle>();
-        if (shuttle != null) {
-            print("Died");
-            // Add the score
-            Destroy(shuttle.gameObject);
-        }
-    }
-
 }

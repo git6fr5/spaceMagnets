@@ -14,16 +14,25 @@ using UnityEngine;
 public class Spawner : MonoBehaviour {
 
     /* --- Components --- */
+    public Transform arrow;
     private SpriteRenderer spriteRenderer;
     public Shuttle shuttle;
-    public Transform purpleArrow;
 
     /* --- Properties --- */
     private Vector2 direction;
     public float speed;
     public float spawnInterval;
     private float spawnTicks = 0f;
+
+    [Space(5), Header("Manual Spawning")]
+    [SerializeField] private bool manualSpawn = false;
     private KeyCode spawnKey = KeyCode.Space;
+
+    [Space(5), Header("Increment Keys")]
+    [SerializeField] private int angleIncrements = 8;
+    private int angleIndex = 0;
+    private KeyCode clockwiseKey = KeyCode.K;
+    private KeyCode counterClockwiseKey = KeyCode.J;
 
     /* --- Unity --- */
     // Start is called before the first frame update
@@ -33,14 +42,59 @@ public class Spawner : MonoBehaviour {
 
         // Set up these components.
         spriteRenderer.sortingLayerName = GameRules.Midground;
-
-        // Make sure the purple arrow is formatted correctly.
-        SetPurpleArrow(purpleArrow.position);
+        direction = Vector2.right;
     }
 
     // Update is called once per frame
     private void Update() {
 
+        // MouseDirection();
+
+        if (Input.GetKeyDown(clockwiseKey)) {
+            IncrementDirection(1);
+        }
+        else if (Input.GetKeyDown(counterClockwiseKey)) {
+            IncrementDirection(-1);
+        }
+
+        // Make sure the purple arrow is formatted correctly.
+        SetArrow(arrow.position);
+
+        if (manualSpawn) {
+            ManualSpawn();
+        }
+        else {
+            AutomaticSpawn();
+        }
+    }
+
+    /* --- Methods --- */
+    private void MouseDirection() {
+        // for hard set directions.
+        // direction = (arrow.position - transform.position).normalized;
+
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        direction = (mousePos - (Vector2)transform.position).normalized;
+
+    }
+
+    private void IncrementDirection(int increment) {
+        angleIndex += increment;
+        direction = Quaternion.Euler(0, 0, angleIndex * (360 / angleIncrements)) * Vector2.right;
+
+    }
+
+    private void AutomaticSpawn() {
+        // Increment the spawn cooldown.
+        if (spawnTicks > 0f) {
+            spawnTicks -= Time.deltaTime;
+        }
+        else {
+            Spawn();
+        }
+    }
+
+    private void ManualSpawn() {
         // Spawn a shuttle on the spawn key.
         if (Input.GetKeyDown(spawnKey) && spawnTicks == 0f && !GameRules.IsEditing) {
             Spawn();
@@ -55,7 +109,6 @@ public class Spawner : MonoBehaviour {
         }
     }
 
-    /* --- Methods --- */
     private void Spawn() {
         // Instantiate the shuttle.
         Shuttle nextShuttle = Instantiate(shuttle, transform.position + (Vector3)direction / 2f, Quaternion.identity, null);
@@ -70,14 +123,12 @@ public class Spawner : MonoBehaviour {
         spawnTicks = spawnInterval;
     }
 
-    public void SetPurpleArrow(Vector2 position) {
+    public void SetArrow(Vector2 position) {
 
-        purpleArrow.position = position;
+        arrow.position = position;
 
-        // Set the direction.
-        direction = (purpleArrow.position - transform.position).normalized;
         // Normalize the actual arrow position.
-        purpleArrow.position = transform.position + (Vector3)direction * 0.75f;
+        arrow.position = transform.position + (Vector3)direction * 0.75f;
 
 
         // Get the angle.
@@ -89,7 +140,7 @@ public class Spawner : MonoBehaviour {
         if (direction.x <= 0) { angle = -angle; flip = 1; }
 
         // Set the direction.
-        purpleArrow.eulerAngles = Vector3.forward * angle + flip * Vector3.up * 180f;
+        arrow.eulerAngles = Vector3.forward * angle + flip * Vector3.up * 180f;
 
     }
 
