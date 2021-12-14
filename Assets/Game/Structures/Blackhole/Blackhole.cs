@@ -6,13 +6,15 @@ using UnityEngine;
 /// <summary>
 /// 
 /// </summary>
-[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(Radial))]
 [RequireComponent(typeof(Score))]
 public class Blackhole : MonoBehaviour {
 
     /* --- Components --- */
-    private SpriteRenderer spriteRenderer;
+    private MeshFilter meshFilter;
+    private MeshRenderer meshRenderer;
     private Radial forceField;
     private Score score;
 
@@ -24,19 +26,23 @@ public class Blackhole : MonoBehaviour {
     /* --- Unity --- */
     private void Start() {
         // Cache these components
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        meshRenderer = GetComponent<MeshRenderer>();
         forceField = GetComponent<Radial>();
         score = GetComponent<Score>();
 
         // Set up the components
         SetForceField();
         score.value = scoreValue;
-        spriteRenderer.sortingLayerName = GameRules.Midground;
+        meshRenderer = GetComponent<MeshRenderer>();
+        meshFilter = GetComponent<MeshFilter>();
     }
 
     // Runs once per frame.
     private void Update() {
         SetForceField();
+        if (Background.Instance?.grid != null) {
+            Background.Instance.grid.ApplyClockwiseForce(10000f, transform.position, 1f);
+        }
     }
 
     void OnTriggerStay2D(Collider2D collider) {
@@ -48,7 +54,7 @@ public class Blackhole : MonoBehaviour {
         forceField.isActive = true;
         forceField.direction = Force.Direction.Pull;
         forceField.magnitude = mass * 5;
-        forceField.radius = Mathf.Sqrt(mass);
+        forceField.radius = mass;
     }
 
     /* --- Methods --- */

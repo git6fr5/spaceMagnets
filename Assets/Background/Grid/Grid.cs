@@ -111,6 +111,46 @@ public class Grid {
         }
     }
 
+    public void ApplyJiggleForce(float force, Vector3 position, float radius, float factor = 10f, float dampingFactor = 0.6f) {
+
+        for (int i = 0; i < points.Length; i++) {
+            for (int j = 0; j < points[i].Length; j++) {
+                float sqrDistance = (position - points[i][j].position).sqrMagnitude;
+                if (sqrDistance < radius * radius) {
+                    points[i][j].ApplyForce(factor * force * new Vector3(Random.Range(-radius, radius), Random.Range(-radius, radius), 0f) / (factor * factor + sqrDistance));
+                    points[i][j].damping *= dampingFactor;
+                }
+            }
+        }
+    }
+
+    public void ApplyClockwiseForce(float force, Vector3 position, float radius, float factor = 10f, float dampingFactor = 0.6f) {
+
+        for (int i = 0; i < points.Length; i++) {
+            for (int j = 0; j < points[i].Length; j++) {
+                float sqrDistance = (position - points[i][j].position).sqrMagnitude;
+                if (sqrDistance < radius * radius) {
+                    points[i][j].ApplyForce(factor * force * (Quaternion.Euler(0, 0, 90) * (position - points[i][j].position)) / (factor * factor + sqrDistance));
+                    points[i][j].damping *= dampingFactor;
+                }
+            }
+        }
+    }
+
+    public void ApplyCounterClockwiseForce(float force, Vector3 position, float radius, float factor = 10f, float dampingFactor = 0.6f) {
+
+        for (int i = 0; i < points.Length; i++) {
+            for (int j = 0; j < points[i].Length; j++) {
+                float sqrDistance = (position - points[i][j].position).sqrMagnitude;
+                if (sqrDistance < radius * radius) {
+                    points[i][j].ApplyForce(factor * force * (Quaternion.Euler(0, 0, -90) * (position - points[i][j].position)) / (factor * factor + sqrDistance));
+                    points[i][j].damping *= dampingFactor;
+                }
+            }
+        }
+    }
+
+
     public void ApplyExplosiveForce(float force, Vector3 position, float radius, float factor = 100f, float dampingFactor = 0.6f) {
 
         for (int i = 0; i < points.Length; i++) {

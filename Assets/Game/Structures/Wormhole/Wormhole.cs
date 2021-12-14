@@ -12,6 +12,11 @@ using UnityEngine;
 [RequireComponent(typeof(Score))]
 public class Wormhole : MonoBehaviour {
 
+    public enum WormholeRotation {
+        Clockwise,
+        Counterclockwise
+    }
+
     /* --- Components --- */
     private SpriteRenderer spriteRenderer;
     private CircleCollider2D hitbox;
@@ -20,6 +25,7 @@ public class Wormhole : MonoBehaviour {
     public Rope rope;
 
     /* --- Properties --- */
+    public WormholeRotation rotation;
     public Wormhole originPoint;
     public Wormhole targetPoint;
     public string wormholeName;
@@ -69,6 +75,13 @@ public class Wormhole : MonoBehaviour {
         }
         if (targetPoint != null) {
             TargetBounds();
+        }
+
+        if (Background.Instance?.grid != null && rotation == WormholeRotation.Clockwise) {
+            Background.Instance.grid.ApplyClockwiseForce(1000f, transform.position, 1f);
+        }
+        else {
+            Background.Instance.grid.ApplyCounterClockwiseForce(1000f, transform.position, 1f);
         }
     }
 

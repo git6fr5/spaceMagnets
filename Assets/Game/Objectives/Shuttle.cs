@@ -6,7 +6,8 @@ using UnityEngine;
 /// <summary>
 /// 
 /// </summary>
-[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CapsuleCollider2D))]
 [RequireComponent(typeof(ScoreCollector))]
@@ -36,7 +37,7 @@ public class Shuttle : MonoBehaviour {
         body.gravityScale = 0f;
         body.angularDrag = 0f;
         hitbox.isTrigger = true;
-        spriteRenderer.sortingLayerName = GameRules.Midground;
+        // spriteRenderer.sortingLayerName = GameRules.Midground;
     }
 
     private void Update() {
@@ -63,7 +64,7 @@ public class Shuttle : MonoBehaviour {
         if (velocity.x <= 0) { angle = -angle; flip = 1; }
 
         // Set the direction.
-        transform.eulerAngles = Vector3.forward * angle + flip * Vector3.up * 180f;
+        transform.eulerAngles = Vector3.forward * angle + flip * Vector3.up * 180f + Vector3.up * 90f;
     }
 
     private void Control() {
