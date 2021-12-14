@@ -29,7 +29,7 @@ public class PlanetGeneratorSettings {
     public float rotationIncrements;
     public float[] rotationAxis;
 
-    public PlanetGeneratorSettings(ProceduralPlanetGenerator gen) {
+    public PlanetGeneratorSettings(PlanetGenerator gen) {
 
         this.planetName = gen.planetName;
         this.textureType = (int)gen.textureType;
@@ -68,7 +68,7 @@ public class PlanetGeneratorSettings {
 
     }
 
-    public static void Load(ProceduralPlanetGenerator gen) {
+    public static void Load(PlanetGenerator gen) {
 
         // Concatenate the path.
         string fullPath = GameRules.Path + path + gen.planetName + filetype;
@@ -81,15 +81,15 @@ public class PlanetGeneratorSettings {
             PlanetGeneratorSettings settings = (PlanetGeneratorSettings)formatter.Deserialize(fileStream);
 
             gen.planetName = settings.planetName;
-            gen.textureType = (ProceduralPlanetGenerator.TextureType)settings.textureType;
-            gen.refreshType = (ProceduralPlanetGenerator.RefreshType)settings.refreshType;
+            gen.textureType = (PlanetGenerator.TextureType)settings.textureType;
+            gen.refreshType = (PlanetGenerator.RefreshType)settings.refreshType;
             gen.radius = settings.radius;
             gen.seaLevel = settings.seaLevel;
             gen.heightRange = settings.heightRange;
             gen.subdivisions = settings.subdivisions;
             // gen.waterGradient = settings.waterGradient;
             // gen.landGradient = settings.landGradient;
-            gen.vectorSeed = new Vector2( settings.vectorSeed[1], settings.vectorSeed[2] );
+            gen.vectorSeed = new Vector2( settings.vectorSeed[0], settings.vectorSeed[1] );
             gen.autoRebuild = settings.autoRebuild;
             gen.animationFrameRate = settings.animationFrameRate;
             gen.incrementPerFrame = settings.incrementPerFrame;

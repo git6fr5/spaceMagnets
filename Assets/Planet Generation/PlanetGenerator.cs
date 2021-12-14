@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-public class ProceduralPlanetGenerator : MonoBehaviour {
+public class PlanetGenerator : MonoBehaviour {
 
     /* --- Enumeration --- */
     public enum TextureType {
@@ -379,6 +379,12 @@ public class ProceduralPlanetGenerator : MonoBehaviour {
     }
 
     public void Load() {
+        PlanetGeneratorSettings.Load(this);
+        BuildPlanet();
+    }
+
+    public void Load(string planetName) {
+        this.planetName = planetName;
         PlanetGeneratorSettings.Load(this);
     }
 

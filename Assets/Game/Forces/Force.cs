@@ -24,8 +24,8 @@ public class Force : MonoBehaviour {
     /* --- Properties --- */
     public float magnitude;
     [SerializeField] private List<Shuttle> shuttles;
-    [SerializeField] private List<Sand> sandBox;
-    [SerializeField] private List<Star> stars;
+    //[SerializeField] private List<Sand> sandBox;
+    //[SerializeField] private List<Star> stars;
     // State Variables
     public bool isActive = false;
 
@@ -38,11 +38,10 @@ public class Force : MonoBehaviour {
 
     // Runs once every frame.
     private void FixedUpdate() {
-        // Get the shuttles in the area.
-        UpdateCollisions();
-
         // Apply the forces.
         if (isActive) {
+            // Get the shuttles in the area.
+            UpdateCollisions();
             ApplyForces();
         }
 
@@ -54,18 +53,18 @@ public class Force : MonoBehaviour {
         Collider2D[] colliders = Area();
 
         shuttles = new List<Shuttle>();
-        sandBox = new List<Sand>();
-        stars = new List<Star>();
+        //sandBox = new List<Sand>();
+        //stars = new List<Star>();
 
         for (int i = 0; i < colliders.Length; i++) {
             Shuttle shuttle = colliders[i].GetComponent<Shuttle>();
             if (shuttle != null) { shuttles.Add(shuttle); }
 
-            Sand sand = colliders[i].GetComponent<Sand>();
-            if (sand != null) { sandBox.Add(sand); }
+            //Sand sand = colliders[i].GetComponent<Sand>();
+            //if (sand != null) { sandBox.Add(sand); }
 
-            Star star = colliders[i].GetComponent<Star>();
-            if (star != null) { stars.Add(star); }
+            //Star star = colliders[i].GetComponent<Star>();
+            //if (star != null) { stars.Add(star); }
         }
 
     }
@@ -76,16 +75,16 @@ public class Force : MonoBehaviour {
         for (int i = 0; i < shuttles.Count; i++) {
             Apply(shuttles[i]);
         }
+        ForceToGrid(magnitude * magnitude);
+        //// Apply a force to each of those pieces of sand.
+        //for (int i = 0; i < sandBox.Count; i++) {
+        //    Apply(sandBox[i]);
+        //}
 
-        // Apply a force to each of those pieces of sand.
-        for (int i = 0; i < sandBox.Count; i++) {
-            Apply(sandBox[i]);
-        }
-
-        // Apply a force to each of those pieces of sand.
-        for (int i = 0; i < stars.Count; i++) {
-            // Apply(stars[i]);
-        }
+        //// Apply a force to each of those pieces of sand.
+        //for (int i = 0; i < stars.Count; i++) {
+        //    Apply(stars[i]);
+        //}
 
     }
 
@@ -98,7 +97,7 @@ public class Force : MonoBehaviour {
             Vector2 acceleration = (int)direction * magnitude * forceDirection / sqrDistance;
             Vector2 deltaAcceleration = Time.fixedDeltaTime * acceleration;
             shuttle.velocity += deltaAcceleration;
-            print("Applying Force");
+            print("Applying force to a Shuttle.");
         }
     }
 
@@ -131,6 +130,10 @@ public class Force : MonoBehaviour {
     /* --- Virtual --- */
     protected virtual Collider2D[] Area() {
         return new Collider2D[0];
+    }
+
+    protected virtual void ForceToGrid(float force) {
+        //
     }
 
 }

@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(LineRenderer))]
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
 public class Rope : MonoBehaviour {
 
     /* --- Components --- */
-    protected LineRenderer lineRenderer;
+    protected MeshFilter meshFilter;
+    protected MeshRenderer meshRenderer;
 
     /* --- Static Variables --- */
     [SerializeField] protected static float SegmentLength = 0.2f;
@@ -28,10 +30,10 @@ public class Rope : MonoBehaviour {
     // Runs once on initialization.
     void Awake() {
         // Cache these references.
-        lineRenderer = GetComponent<LineRenderer>();
-        
+        meshFilter = GetComponent<MeshFilter>();
+
         // Set up these components.
-        // 
+        meshFilter.mesh = new Mesh();
     }
 
     // Runs once every frame.
@@ -40,6 +42,9 @@ public class Rope : MonoBehaviour {
             RopeSegments();
             initialized = true;
         }
+    }
+
+    void OnGUI() {
         Render();
     }
 
@@ -61,24 +66,39 @@ public class Rope : MonoBehaviour {
         prevRopeSegments = new Vector3[segmentCount];
 
         for (int i = 0; i < segmentCount; i++) {
-            ropeSegments[i] = startpoint.position;
+            ropeSegments[i] = Vector2.zero;
             prevRopeSegments[i] = ropeSegments[i];
         }
         ropeSegments[segmentCount - 1] += ropeLength * Vector3.right;
 
-        lineRenderer.sortingLayerName = GameRules.Background;
     }
 
     // Renders the rope using the line renderer and edge collider.
     void Render() {
-        lineRenderer.startWidth = ropeWidth;
-        lineRenderer.endWidth = ropeWidth;
-        lineRenderer.positionCount = segmentCount;
-        lineRenderer.SetPositions(ropeSegments);
+
+        List<Vector3> positions = new List<Vector3>();
+        positions.Add(ropeSegments[0]);
+
+        List<Color> colors = new List<Color>();
+        colors.Add(Color.white);
+
+        List<int> indices = new List<int>();
+        
+        for (int i = 1; i < ropeSegments.Length; i++) {
+            positions.Add(ropeSegments[i]);
+            indices.Add(i - 1);
+            indices.Add(i);
+            colors.Add(Color.white);
+        }
+
+        meshFilter.mesh.SetVertices(positions);
+        meshFilter.mesh.SetIndices(indices.ToArray(), MeshTopology.Lines, 0);
+        meshFilter.mesh.colors = colors.ToArray();
+
     }
 
     void Simulation() {
-        // Vector3 forceGravity = new Vector3(0f, -SegmentWeight * GameRules.GravityScale, 0f);
+        // Vector3 forceGravity = new Vector3(0f, -SegmentWeight * 1f, 0f);
         for (int i = 0; i < segmentCount; i++) {
             Vector3 velocity = ropeSegments[i] - prevRopeSegments[i];
             prevRopeSegments[i] = ropeSegments[i];
@@ -91,8 +111,8 @@ public class Rope : MonoBehaviour {
     }
 
     protected virtual void Constraints() {
-        ropeSegments[0] = startpoint.position;
-        ropeSegments[segmentCount - 1] = endpoint.position;
+        ropeSegments[0] = Vector2.zero;
+        ropeSegments[segmentCount - 1] = endpoint.position - startpoint.position;
 
         for (int i = 1; i < segmentCount; i++) {
             // Get the distance and direction between the segments.
@@ -109,6 +129,23 @@ public class Rope : MonoBehaviour {
             }
             ropeSegments[i] += errorVector * 0.5f;
         }
+
+        //ropeSegments[0] = Vector2.zero; // startpoint.position;
+        //for (int i = 1; i < segmentCount; i++) {
+        //    // Get the distance and direction between the segments.
+        //    float newDist = (ropeSegments[i - 1] - ropeSegments[i]).magnitude;
+        //    Vector3 direction = (ropeSegments[i - 1] - ropeSegments[i]).normalized;
+
+        //    // Get the error term.
+        //    float error = newDist - SegmentLength;
+        //    Vector3 errorVector = direction * error;
+
+        //    // Adjust the segments by the error term.
+        //    if (i != 1) {
+        //        ropeSegments[i - 1] -= errorVector * 0.5f;
+        //    }
+        //    ropeSegments[i] += errorVector * 0.5f;
+        //}
     }
 
 }

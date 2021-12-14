@@ -25,6 +25,12 @@ public class Radial : Force {
         return colliders;
     }
 
+    protected override void ForceToGrid(float force) {
+        if (Background.Instance?.grid != null) {
+            Background.Instance.grid.ApplyImplosiveForce(force, transform.position, radius);
+        }
+    }
+
 
     /* --- Editor --- */
     private void OnDrawGizmos() {

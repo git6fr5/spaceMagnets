@@ -41,15 +41,15 @@ public class Shuttle : MonoBehaviour {
 
     private void Update() {
         Velocity();
-        // Point();
+        Point();
         if (isControllable) {
-            Control();
+            // Control();
         }
     }
 
     /* --- Methods --- */
     private void Velocity() {
-        body.velocity = Vector2.ClampMagnitude(velocity, maxSpeed);
+        body.velocity = velocity; // Vector2.ClampMagnitude(velocity, maxSpeed);
     }
 
     private void Point() {
