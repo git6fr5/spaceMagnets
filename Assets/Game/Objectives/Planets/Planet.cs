@@ -101,7 +101,7 @@ public class Planet : MonoBehaviour {
         forceField.isActive = true;
         forceField.direction = Force.Direction.Pull;
         forceField.magnitude = mass;
-        forceField.radius = Mathf.Sqrt(mass);
+        forceField.radius = mass;
     }
 
     /* --- Methods --- */

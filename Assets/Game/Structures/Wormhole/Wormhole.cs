@@ -29,7 +29,7 @@ public class Wormhole : MonoBehaviour {
     public Wormhole originPoint;
     public Wormhole targetPoint;
     public string wormholeName;
-    public int scoreValue;
+    public int scoreValue = 0;
     public Vector2 velocity;
     [Range(0.05f, 1f)] public float velocityFactor; // either make this static - or make it so that if the interactable component is moving, then this has 0 or less value.
 

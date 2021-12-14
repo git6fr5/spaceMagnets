@@ -94,7 +94,7 @@ public class Force : MonoBehaviour {
         Vector2 forceDirection = (transform.position - shuttle.transform.position).normalized;
         // Apply the force (as long as we're not inside the actual object).
         if (sqrDistance > hitbox.radius * hitbox.radius) {
-            Vector2 acceleration = (int)direction * magnitude * forceDirection / sqrDistance;
+            Vector2 acceleration = (int)direction * Mathf.Sqrt((float)magnitude) * forceDirection / Mathf.Sqrt(sqrDistance);
             Vector2 deltaAcceleration = Time.fixedDeltaTime * acceleration;
             shuttle.velocity += deltaAcceleration;
             print("Applying force to a Shuttle.");
@@ -103,14 +103,14 @@ public class Force : MonoBehaviour {
 
     private void Apply(Sand sand) {
         // Get the square distance.
-        float sqrDistance = (transform.position - sand.transform.position).sqrMagnitude;
-        Vector2 forceDirection = (transform.position - sand.transform.position).normalized;
-        // Apply the force (as long as we're not inside the actual object).
-        if (sqrDistance > hitbox.radius * hitbox.radius) {
-            Vector2 acceleration = (int)direction * magnitude * forceDirection / sqrDistance;
-            Vector2 deltaAcceleration = Time.fixedDeltaTime * acceleration;
-            sand.velocity += deltaAcceleration;
-        }
+        //float sqrDistance = (transform.position - sand.transform.position).sqrMagnitude;
+        //Vector2 forceDirection = (transform.position - sand.transform.position).normalized;
+        //// Apply the force (as long as we're not inside the actual object).
+        //if (sqrDistance > hitbox.radius * hitbox.radius) {
+        //    Vector2 acceleration = (int)direction * magnitude * forceDirection / sqrDistance;
+        //    Vector2 deltaAcceleration = Time.fixedDeltaTime * acceleration;
+        //    sand.velocity += deltaAcceleration;
+        //}
         // sand.GetComponent<SpriteRenderer>().color = direction == Direction.Pull ? GameRules.Red : GameRules.Blue;
 
     }

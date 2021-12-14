@@ -54,6 +54,7 @@ public class ScoreCollector : MonoBehaviour {
             if (scores.ContainsKey(score)) {
                 // Update the score.
                 float newScore = (float)score.value / ((score.transform.position - transform.position).magnitude - score.hitbox.radius);
+                newScore = Mathf.Min(score.value, newScore);
                 if (newScore > scores[score]) {
                     scores[score] = newScore;
                 }
