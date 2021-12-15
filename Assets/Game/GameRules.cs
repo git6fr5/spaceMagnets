@@ -26,8 +26,9 @@ public class GameRules : MonoBehaviour {
 
     /* --- Screen Dimensions --- */
     public static int PixelsPerUnit = 16;
-    public static int PixelsVertical = 144;
     public static int PixelsHorizontal = 256;
+    public static int PixelsVertical = 144;
+    public static int UnitDivision = 2;
 
     /* --- Colors --- */
     public static Color Red = Color.red;
@@ -42,6 +43,15 @@ public class GameRules : MonoBehaviour {
     public static bool IsEditing;
     // public bool isEditing;
     public Background background;
+
+    void Start() {
+
+        if (background != null) {
+            background.verticalPrecision = UnitDivision * PixelsVertical / PixelsPerUnit;
+            background.horizontalPrecision = UnitDivision * PixelsHorizontal / PixelsPerUnit;
+        }
+
+    }
 
     void Update() {
 
