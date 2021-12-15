@@ -11,18 +11,14 @@ using UnityEngine.UI;
 public class Brochure : MonoBehaviour {
 
     /* --- Components --- */
-    public Text textbox;
+    public GameObject revenueComponentObject;
+    public Transform contentTransform;
 
     /* --- Properties --- */
 
     /* --- Unity --- */
     private void Start() {
-        // Cache these components
-        //spriteRenderer = GetComponent<SpriteRenderer>();
-
-        //// Set up the components
-        //spriteRenderer.sortingLayerName = GameRules.Foreground;
-        FindPlanets();
+        FindRevenues();
     }
 
     private void Update() {
@@ -30,15 +26,18 @@ public class Brochure : MonoBehaviour {
     }
 
     /* --- Methods --- */
-    private void FindPlanets() {
-        Planet[] planets = (Planet[])GameObject.FindObjectsOfType(typeof(Planet));
-        for (int i = 0; i < planets.Length; i++) {
+    private void FindRevenues() {
+        Revenue[] revenues = (Revenue[])GameObject.FindObjectsOfType(typeof(Revenue));
+        for (int i = 0; i < revenues.Length; i++) {
             // Destroy(shuttles[i].gameObject);
-            float yOffset = textbox.GetComponent<RectTransform>().sizeDelta.y;
-            Text newTextbox = Instantiate(textbox.gameObject, Vector3.zero, Quaternion.identity, transform).GetComponent<Text>();
-            newTextbox.GetComponent<RectTransform>().localPosition = textbox.GetComponent<RectTransform>().localPosition + new Vector3(0f, -i * yOffset, 0f);
-            newTextbox.text = planets[i].planetName + ": " + planets[i].scoreValue.ToString();
-            newTextbox.gameObject.SetActive(true);
+            float yOffset = revenueComponentObject.GetComponent<RectTransform>().sizeDelta.y;
+            GameObject newObject = Instantiate(revenueComponentObject.gameObject, Vector3.zero, Quaternion.identity, contentTransform);
+            newObject.GetComponent<RectTransform>().localPosition = revenueComponentObject.GetComponent<RectTransform>().localPosition + new Vector3(0f, -i * yOffset, 0f);
+
+            // newTextbox.transform.SetParent(contentTransform);
+            Text newTextbox = newObject.transform.GetChild(0).GetComponent<Text>();
+            newTextbox.text = revenues[i].locationName + "\n (" + revenues[i].type.ToString() + ")\n Value: " + revenues[i].value.ToString();
+            newObject.gameObject.SetActive(true);
         }
     }
 

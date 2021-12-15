@@ -16,13 +16,12 @@ public class ScoreUI : MonoBehaviour {
 
     private void Update() {
 
-        Shuttle[] shuttles = (Shuttle[])GameObject.FindObjectsOfType(typeof(Shuttle));
-        for (int i = 0; i < shuttles.Length; i++) {
-            if (shuttles[i].GetComponent<ScoreCollector>().value > currScore) {
-                currScore = shuttles[i].GetComponent<ScoreCollector>().value;
-            }
+        ShuttlePath shuttlePath = (ShuttlePath)GameObject.FindObjectOfType(typeof(ShuttlePath));
+        string profitString = "Did not reach station.";
+        if (shuttlePath.reachedStation) {
+            profitString = shuttlePath.profit.ToString();
         }
-        textbox.text = "Score: " + currScore.ToString();
+        textbox.text = "Revenue: " + shuttlePath.revenue.ToString() + ", Costs: " + shuttlePath.cost.ToString() + ", Profit: " + profitString;
 
     }
 

@@ -25,15 +25,15 @@ public class GameRules : MonoBehaviour {
     public static string Foreground = "Foreground";
 
     /* --- Screen Dimensions --- */
-    public static int PixelsPerUnit = 8;
-    public static int PixelsVertical = 128;
+    public static int PixelsPerUnit = 16;
+    public static int PixelsVertical = 144;
     public static int PixelsHorizontal = 256;
 
     /* --- Colors --- */
     public static Color Red = Color.red;
     public static Color Blue = Color.blue;
     public static Color White = Color.white;
-
+    public static Color Yellow = Color.yellow;
 
     // Collect objects in game
     // Set their outline colors
@@ -44,6 +44,10 @@ public class GameRules : MonoBehaviour {
     public Background background;
 
     void Update() {
+
+        if (background == null) {
+            return;
+        }
 
         // IsEditing = isEditing;
         if (IsEditing) {
@@ -82,4 +86,11 @@ public class GameRules : MonoBehaviour {
         }
 
     }
+
+    /* --- Editor --- */
+    private void OnDrawGizmos() {
+        Gizmos.color = Yellow;
+        Gizmos.DrawWireCube(transform.position, new Vector3(PixelsHorizontal / PixelsPerUnit, PixelsVertical / PixelsPerUnit, 1f));
+    }
+
 }

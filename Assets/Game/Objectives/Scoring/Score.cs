@@ -13,7 +13,7 @@ public class Score : MonoBehaviour {
     [HideInInspector] public CircleCollider2D hitbox;
 
     /* --- Properties --- */
-    [HideInInspector] public int value = 0;
+    public int value = 0;
 
     /* --- Unity --- */
     private void Start() {
@@ -23,5 +23,11 @@ public class Score : MonoBehaviour {
         // Set up these components.
         hitbox.isTrigger = true;
     }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position, ShuttlePath.MaxDistance);
+    }
+
 
 }

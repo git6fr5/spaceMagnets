@@ -114,7 +114,7 @@ public class Spawner : MonoBehaviour {
         Shuttle nextShuttle = Instantiate(shuttle, transform.position + (Vector3)direction / 2f, Quaternion.identity, null);
 
         // Set up the shuttle.
-        nextShuttle.velocity = direction * speed;
+        // nextShuttle.velocity = direction * speed;
 
         // Activate the shuttle.
         nextShuttle.gameObject.SetActive(true);

@@ -100,8 +100,7 @@ public class Planet : MonoBehaviour {
     private void SetForceField() {
         forceField.isActive = true;
         forceField.direction = Force.Direction.Pull;
-        forceField.magnitude = mass;
-        forceField.radius = mass;
+        forceField.mass = mass;
     }
 
     /* --- Methods --- */

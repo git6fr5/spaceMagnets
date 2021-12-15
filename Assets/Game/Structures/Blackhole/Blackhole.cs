@@ -53,8 +53,7 @@ public class Blackhole : MonoBehaviour {
     private void SetForceField() {
         forceField.isActive = true;
         forceField.direction = Force.Direction.Pull;
-        forceField.magnitude = mass * 5;
-        forceField.radius = mass;
+        forceField.mass = mass;
     }
 
     /* --- Methods --- */

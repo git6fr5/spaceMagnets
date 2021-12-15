@@ -102,7 +102,36 @@ MonoBehaviour:
   pixel: {fileID: 2800000, guid: dd19986c90574e748a777b9bc7ed1816, type: 3}
   star: {fileID: 1512056783768808640}
   buildGrid: 1
-  gridRenderMode: 3
+  gridRenderMode: 2
+  particleColorGradient:
+    serializedVersion: 2
+    key0: {r: 0.71648574, g: 0, b: 0.972549, a: 0.5019608}
+    key1: {r: 0, g: 0.42032126, b: 0.972549, a: 0.6431373}
+    key2: {r: 0.972549, g: 0.86312664, b: 0, a: 0}
+    key3: {r: 1, g: 0.009601422, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 578
+    ctime1: 21395
+    ctime2: 42405
+    ctime3: 65535
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 4
+    m_NumAlphaKeys: 2
   gridMassPerPoint: 1
   massVelocityDamping: 0.975
   springDisplacementFactor: 100
@@ -256,7 +285,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1512056784602549986}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1512056783174048621}

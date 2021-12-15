@@ -31,6 +31,8 @@ public class Background : MonoBehaviour {
     [SerializeField] private bool buildGrid = false;
 
     public GridRenderMode gridRenderMode = GridRenderMode.Point;
+    public Gradient particleColorGradient;
+
     public float gridMassPerPoint = 1;
     [Range(0.95f, 1f)] public float massVelocityDamping = 0.995f; // The lower, the more snappy?
     [Range(100f, 1000f)] public float springDisplacementFactor = 100f; // The higher, the faster it snaps back (catch-all for all types of springs).
@@ -82,6 +84,7 @@ public class Background : MonoBehaviour {
             List<int> indices = new List<int>();
             List<Color> colors = new List<Color>();
             int index = 0;
+            float particleMaxSpeed = 1000f;
 
             for (int i = 1; i < verticalPrecision; i++) {
                 for (int j = 1; j < horizontalPrecision; j++) {
@@ -89,6 +92,8 @@ public class Background : MonoBehaviour {
                     Vector2 screenPosA;
                     Vector2 screenPosB;
                     Rect rect;
+                    Color col;
+                    float normalizedSpeed;
 
                     switch (gridRenderMode) {
 
@@ -111,7 +116,9 @@ public class Background : MonoBehaviour {
                         case GridRenderMode.MeshPoint:
                             positions.Add(grid.points[i - 1][j - 1].position);
                             indices.Add(index);
-                            colors.Add(Color.white);
+                            normalizedSpeed = Mathf.Min(1f, grid.points[i - 1][j - 1].velocity.sqrMagnitude / particleMaxSpeed * particleMaxSpeed);
+                            col = particleColorGradient.Evaluate(normalizedSpeed);
+                            colors.Add(col);
                             index = index + 1;
                             break;
                         default:
