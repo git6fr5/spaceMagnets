@@ -64,6 +64,9 @@ public class ShuttlePath : MonoBehaviour {
     public Vector2 direction;
     public int angleIncrements = 16;
     public int angleIndex = 0;
+    public float pressTurnedBuffer;
+    public float holdTurnedBuffer;
+    [SerializeField] private float turnedTicks = 0f;
     public KeyCode launchKey = KeyCode.Space;
     public KeyCode clockwiseKey = KeyCode.J;
     public KeyCode counterClockwiseKey = KeyCode.K;
@@ -84,11 +87,30 @@ public class ShuttlePath : MonoBehaviour {
             Launch();
         }
 
+
         if (Input.GetKeyDown(clockwiseKey)) {
             IncrementDirection(1);
+            turnedTicks = pressTurnedBuffer;
         }
         else if (Input.GetKeyDown(counterClockwiseKey)) {
             IncrementDirection(-1);
+            turnedTicks = pressTurnedBuffer;
+        }
+
+        if (Input.GetKey(clockwiseKey) && turnedTicks <= 0f) {
+            IncrementDirection(1);
+            turnedTicks = holdTurnedBuffer;
+        }
+        else if (Input.GetKey(counterClockwiseKey) && turnedTicks <= 0f) {
+            IncrementDirection(-1);
+            turnedTicks = holdTurnedBuffer;
+        }
+
+        if (turnedTicks > 0f) {
+            turnedTicks -= Time.deltaTime;
+        }
+        else {
+            turnedTicks = 0f;
         }
 
         if (reachedStation) {

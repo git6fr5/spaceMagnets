@@ -64,6 +64,7 @@ public class Asteroid : MonoBehaviour {
         if (index < 0) {
             index = 0;
         }
+        index = index % 1;
         spriteRenderer.sprite = sprites[index];
 
     }

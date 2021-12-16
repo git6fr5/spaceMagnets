@@ -28,7 +28,7 @@ public class GameRules : MonoBehaviour {
     public static int PixelsPerUnit = 16;
     public static int PixelsHorizontal = 256;
     public static int PixelsVertical = 144;
-    public static int UnitDivision = 2;
+    public static int UnitDivision = 4;
 
     /* --- Colors --- */
     public static Color Red = Color.red;
@@ -69,20 +69,11 @@ public class GameRules : MonoBehaviour {
             Time.timeScale = 1f;
         }
 
-        //if (Input.GetKeyDown(KeyCode.E)) {
-        //    isEditing = !isEditing;
-        //    Reset();
-        //}
+    }
 
-        //ForceUI[] forceUIs = (ForceUI[])GameObject.FindObjectsOfType(typeof(ForceUI));
-        //for (int i = 0; i < forceUIs.Length; i++) {
-        //    forceUIs[i].enabled = isEditing;
-        //}
-
-        //Spawner spawner = (Spawner)GameObject.FindObjectOfType<Spawner>();
-        //spawner.enabled = !isEditing;
-
-
+    void OnGUI() {
+        //Gizmos.color = Yellow;
+        //Gizmos.DrawWireCube(transform.position, new Vector3(PixelsHorizontal / PixelsPerUnit, PixelsVertical / PixelsPerUnit, 1f));
     }
 
     public static void Reset() {

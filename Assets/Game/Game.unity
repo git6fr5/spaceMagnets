@@ -497,6 +497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rope: {fileID: 8334699193236827637, guid: 48e253191d92a754d8019d50aa57adb9, type: 3}
+  renderMode: 1
   rotation: 0
   originPoint: {fileID: 0}
   targetPoint: {fileID: 340881468}
@@ -1069,6 +1070,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rope: {fileID: 8334699193236827637, guid: 48e253191d92a754d8019d50aa57adb9, type: 3}
+  renderMode: 1
   rotation: 1
   originPoint: {fileID: 0}
   targetPoint: {fileID: 142603741}
@@ -1235,6 +1237,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1512056783174048620, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
+      propertyPath: pressBuffer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1512056783174048620, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
+      propertyPath: factor
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048621, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1293,59 +1303,59 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.key0.a
-      value: 0
+      value: 0.2509804
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.key1.a
-      value: 1
+      value: 0.5019608
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
-      propertyPath: particleColorGradient.key0.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
-      propertyPath: particleColorGradient.key0.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
-      propertyPath: particleColorGradient.key1.r
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
+      propertyPath: particleColorGradient.key0.r
+      value: 0.71648574
+      objectReference: {fileID: 0}
+    - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
+      propertyPath: particleColorGradient.key0.b
+      value: 0.972549
+      objectReference: {fileID: 0}
+    - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
+      propertyPath: particleColorGradient.key1.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.key1.g
-      value: 0.7254902
+      value: 0.42032126
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.key1.b
-      value: 0.21960786
+      value: 0.972549
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.key2.r
-      value: 0.9490197
+      value: 0.972549
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.key2.g
-      value: 0.07450981
+      value: 0.86312664
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.key2.b
-      value: 0.07450981
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.key3.r
-      value: 0.9490197
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.key3.g
-      value: 0.07450981
+      value: 0.009601422
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.key3.b
-      value: 0.07450981
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.key4.r
@@ -1373,19 +1383,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.ctime0
-      value: 0
+      value: 578
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.ctime1
-      value: 19661
+      value: 21395
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.ctime2
-      value: 32768
+      value: 42405
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.ctime3
-      value: 45875
+      value: 65535
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.ctime4
@@ -1397,11 +1407,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.m_NumColorKeys
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
       propertyPath: particleColorGradient.m_Mode
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
+      propertyPath: gridColorMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
+      propertyPath: interpolate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
+      propertyPath: invertColors
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
@@ -1638,7 +1660,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &986665777
 GameObject:
   m_ObjectHideFlags: 0
@@ -2221,8 +2243,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AssetsPPU: 16
-  m_RefResolutionX: 256
-  m_RefResolutionY: 144
+  m_RefResolutionX: 288
+  m_RefResolutionY: 176
   m_UpscaleRT: 0
   m_PixelSnapping: 0
   m_CropFrameX: 1
@@ -2356,6 +2378,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1323318293 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1512056783174048659, guid: e7d87317febf2b64c9b4dca549465883, type: 3}
+  m_PrefabInstance: {fileID: 408771432}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9064691a440f8e428ca9d5692636596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1382127059
 GameObject:
   m_ObjectHideFlags: 0
@@ -2629,7 +2662,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1494197854
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3241,7 +3274,7 @@ MonoBehaviour:
   horizon: 0.5
   radius: 2
   isActive: 1
-  pulse: 1
+  pulse: 0
   pulseInterval: 0.6
   period: 1.2
 --- !u!4 &1797231432
@@ -3510,7 +3543,7 @@ MonoBehaviour:
   horizon: 0.9
   radius: 2.5
   isActive: 1
-  pulse: 1
+  pulse: 0
   pulseInterval: 0.3
   period: 0
 --- !u!4 &2090023877
@@ -3559,7 +3592,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2092307201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3641,9 +3674,9 @@ MonoBehaviour:
   renderMode: 2
   lineColorGradient:
     serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
+    key0: {r: 1, g: 1, b: 1, a: 0.5019608}
+    key1: {r: 1, g: 1, b: 1, a: 0.5019608}
+    key2: {r: 0, g: 0, b: 0, a: 0.101960786}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
@@ -3659,7 +3692,7 @@ MonoBehaviour:
     ctime7: 0
     atime0: 0
     atime1: 65535
-    atime2: 0
+    atime2: 65535
     atime3: 0
     atime4: 0
     atime5: 0
@@ -3742,8 +3775,11 @@ MonoBehaviour:
   profit: 0
   shuttle: {fileID: 1575984509}
   direction: {x: 1, y: 0}
-  angleIncrements: 16
+  angleIncrements: 72
   angleIndex: 0
+  pressTurnedBuffer: 0.175
+  holdTurnedBuffer: 0.125
+  turnedTicks: 0
   launchKey: 32
   clockwiseKey: 106
   counterClockwiseKey: 107
@@ -3825,7 +3861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc9aacaf0090578458010ba26800d770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  background: {fileID: 0}
+  background: {fileID: 1323318293}
 --- !u!4 &2125241640
 Transform:
   m_ObjectHideFlags: 0

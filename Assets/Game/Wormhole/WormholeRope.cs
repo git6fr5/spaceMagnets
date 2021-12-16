@@ -6,6 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer))]
 public class WormholeRope : MonoBehaviour {
 
+    public enum RenderMode { 
+        MeshQuads,
+        MeshLines
+    }
+    public RenderMode renderMode;
+
     /* --- Components --- */
     protected MeshFilter meshFilter;
     protected MeshRenderer meshRenderer;
@@ -83,47 +89,56 @@ public class WormholeRope : MonoBehaviour {
         List<Vector3> positions = new List<Vector3>();
         List<int> indices = new List<int>();
         List<Color> colors = new List<Color>();
-        float size = 1f / 16f;
+        MeshTopology meshTopology = MeshTopology.Points;
 
-        for (int i = 0; i < ropeSegments.Length; i += 1) {
+        switch (renderMode) {
+            case (RenderMode.MeshQuads):
 
-            //if (reachedStation && Background.Instance?.grid != null) {
-            //    float magnitude = 100000f;
-            //    Background.Instance.grid.ApplyDirectedForce(shuttleMasses[i].position - shuttleMasses[i - 1].position, transform.position + shuttleMasses[i].position, 1f);
-            //}
+                float size = 1f / 16f;
+                meshTopology = MeshTopology.Triangles;
 
-            Vector3 position = ropeSegments[i]; // - transform.position;
+                for (int i = 0; i < ropeSegments.Length; i += 1) {
 
-            positions.Add(position);
-            positions.Add(position + new Vector3(size, 0f, 0f));
-            positions.Add(position + new Vector3(0f, size, 0f));
-            positions.Add(position + new Vector3(size, size, 0f));
+                    Vector3 position = ropeSegments[i]; // - transform.position;
 
-            indices.Add(4 * i + 0);
-            indices.Add(4 * i + 1);
-            indices.Add(4 * i + 3);
+                    positions.Add(position);
+                    positions.Add(position + new Vector3(size, 0f, 0f));
+                    positions.Add(position + new Vector3(0f, size, 0f));
+                    positions.Add(position + new Vector3(size, size, 0f));
 
-            indices.Add(4 * i + 0);
-            indices.Add(4 * i + 2);
-            indices.Add(4 * i + 3);
+                    indices.Add(4 * i + 0);
+                    indices.Add(4 * i + 1);
+                    indices.Add(4 * i + 3);
 
-            // normalizedSpeed = 0f; // Mathf.Min(1f, shuttleMasses[i].velocity.sqrMagnitude / 5f);
-            Color col = gradient.Evaluate((float)i / (float)ropeSegments.Length);
-            colors.Add(col);
-            colors.Add(col);
-            colors.Add(col);
-            colors.Add(col);
+                    indices.Add(4 * i + 0);
+                    indices.Add(4 * i + 2);
+                    indices.Add(4 * i + 3);
 
+                    // normalizedSpeed = 0f; // Mathf.Min(1f, shuttleMasses[i].velocity.sqrMagnitude / 5f);
+                    Color col = gradient.Evaluate((float)i / (float)ropeSegments.Length);
+                    colors.Add(col);
+                    colors.Add(col);
+                    colors.Add(col);
+                    colors.Add(col);
+                }
+                break;
+            case (RenderMode.MeshLines):
+
+                meshTopology = MeshTopology.Lines;
+                positions.Add(ropeSegments[0]);
+                colors.Add(Color.yellow);
+
+                for (int i = 1; i < ropeSegments.Length; i++) {
+                    positions.Add(ropeSegments[i]);
+                    indices.Add(i - 1);
+                    indices.Add(i);
+                    colors.Add(Color.yellow);
+                }
+                break;
         }
 
-        //for (int i = 1; i < (path.pathPoints.Count); i++) {
-        //	positions.Add(path.pathPoints[i] - transform.position);
-        //	indices.Add(i - 1);
-        //	indices.Add(i);
-        //	colors.Add(Color.yellow);
-        //}
         meshFilter.mesh.SetVertices(positions);
-        meshFilter.mesh.SetIndices(indices.ToArray(), MeshTopology.Triangles, 0);
+        meshFilter.mesh.SetIndices(indices.ToArray(), meshTopology, 0);
         meshFilter.mesh.colors = colors.ToArray();
 
     }

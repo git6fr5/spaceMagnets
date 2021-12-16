@@ -13,10 +13,13 @@ public class PointMass {
     public Vector3 position;
     public Vector3 velocity;
     private Vector3 acceleration;
-    public float damping; 
+    public float damping;
+
+    public Vector3 origin;
 
     public PointMass(Vector3 position) {
         this.position = position;
+        this.origin = position;
         this.damping = Damping;
     }
 

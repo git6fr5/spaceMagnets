@@ -20,6 +20,11 @@ public class Background : MonoBehaviour {
         MeshQuads
     }
 
+    public enum GridColorMode {
+        Displacement,
+        Velocity
+    }
+
     /* --- Components --- */
     [HideInInspector] public SpriteRenderer spriteRenderer;
     public Texture2D pixel;
@@ -32,6 +37,8 @@ public class Background : MonoBehaviour {
     [SerializeField] private bool buildGrid = false;
 
     public GridRenderMode gridRenderMode = GridRenderMode.Point;
+    public GridColorMode gridColorMode = GridColorMode.Velocity;
+    public bool invertColors;
     public Gradient particleColorGradient;
 
     public float gridMassPerPoint = 1;
@@ -58,10 +65,13 @@ public class Background : MonoBehaviour {
     [SerializeField] [Range(1, 10)] private int batchSize = 5;
     [SerializeField] [Range(0.05f, 2f)] private float fireInterval = 1f;
 
-
+    [Space(5), Header("Meshes")]
     // Don't know what I'm doing here.
-    public MeshFilter meshFilter;
-    public MeshRenderer meshRenderer;
+    public MeshFilter gridMeshFilter;
+    public MeshRenderer gridMeshRenderer;
+    // Don't know what I'm doing here.
+    public MeshFilter frameMeshFilter;
+    public MeshRenderer frameMeshRenderer;
 
     /* --- Unity --- */
     // Runs once before the first frame.
@@ -77,17 +87,22 @@ public class Background : MonoBehaviour {
         //mesh = new Mesh();
         Instance = this;
 
+        frameMeshFilter.mesh = new Mesh();
+
     }
 
-    void OnGUI() {
+    private void FixedUpdate() {
 
         if (grid != null) {
+
+            grid.Update(Time.fixedDeltaTime);
 
             List<Vector3> positions = new List<Vector3>();
             List<int> indices = new List<int>();
             List<Color> colors = new List<Color>();
             int index = 0;
             float particleMaxSpeed = 1000f;
+            float particleMaxDisplacement = 1.5f;
 
             for (int i = 1; i < verticalPrecision; i++) {
                 for (int j = 1; j < horizontalPrecision; j++) {
@@ -96,7 +111,7 @@ public class Background : MonoBehaviour {
                     Vector2 screenPosB;
                     Rect rect;
                     Color col;
-                    float normalizedSpeed;
+                    float colorRatio;
 
                     switch (gridRenderMode) {
 
@@ -119,8 +134,9 @@ public class Background : MonoBehaviour {
                         case GridRenderMode.MeshPoint:
                             positions.Add(grid.points[i - 1][j - 1].position);
                             indices.Add(index);
-                            normalizedSpeed = Mathf.Min(1f, grid.points[i - 1][j - 1].velocity.sqrMagnitude / particleMaxSpeed * particleMaxSpeed);
-                            col = particleColorGradient.Evaluate(normalizedSpeed);
+                            // Doesn't work with GridColorMode
+                            colorRatio = Mathf.Min(1f, grid.points[i - 1][j - 1].velocity.sqrMagnitude / particleMaxSpeed * particleMaxSpeed);
+                            col = particleColorGradient.Evaluate(colorRatio);
                             colors.Add(col);
                             index = index + 1;
                             break;
@@ -140,10 +156,19 @@ public class Background : MonoBehaviour {
                             indices.Add(index + 2);
                             indices.Add(index + 3);
 
+                            // Doesn't work with GridColorMode
+                            if (gridColorMode == GridColorMode.Velocity) {
+                                colorRatio = Mathf.Min(1f, grid.points[i - 1][j - 1].velocity.sqrMagnitude / (particleMaxSpeed * particleMaxSpeed));
+                            }
+                            else {
+                                // print("hello");
+                                colorRatio = Mathf.Min(1f, (grid.points[i - 1][j - 1].position - grid.points[i - 1][j - 1].origin).sqrMagnitude / (particleMaxDisplacement * particleMaxDisplacement));
+                                if (invertColors) {
+                                    colorRatio = 1f - colorRatio;
+                                }
+                            }
 
-                            normalizedSpeed = Mathf.Min(1f, grid.points[i - 1][j - 1].velocity.sqrMagnitude / particleMaxSpeed * particleMaxSpeed);
-                            
-                            col = particleColorGradient.Evaluate(normalizedSpeed);
+                            col = particleColorGradient.Evaluate(colorRatio);
                             colors.Add(col);
                             colors.Add(col);
                             colors.Add(col);
@@ -170,9 +195,9 @@ public class Background : MonoBehaviour {
                                 indices.Add(index + 3);
 
 
-                                normalizedSpeed = Mathf.Min(1f, lerpVecY.sqrMagnitude / particleMaxSpeed * particleMaxSpeed);
+                                colorRatio = Mathf.Min(1f, lerpVecY.sqrMagnitude / particleMaxSpeed * particleMaxSpeed);
 
-                                col = particleColorGradient.Evaluate(normalizedSpeed);
+                                col = particleColorGradient.Evaluate(colorRatio);
                                 colors.Add(col);
                                 colors.Add(col);
                                 colors.Add(col);
@@ -201,9 +226,9 @@ public class Background : MonoBehaviour {
                                 indices.Add(index + 3);
 
 
-                                normalizedSpeed = Mathf.Min(1f, lerpVecX.sqrMagnitude / particleMaxSpeed * particleMaxSpeed);
+                                colorRatio = Mathf.Min(1f, lerpVecX.sqrMagnitude / particleMaxSpeed * particleMaxSpeed);
 
-                                col = particleColorGradient.Evaluate(normalizedSpeed);
+                                col = particleColorGradient.Evaluate(colorRatio);
                                 colors.Add(col);
                                 colors.Add(col);
                                 colors.Add(col);
@@ -235,30 +260,57 @@ public class Background : MonoBehaviour {
             }
 
             if (gridRenderMode == GridRenderMode.MeshPoint) {
-                meshFilter.mesh.SetVertices(positions);
-                meshFilter.mesh.SetIndices(indices.ToArray(), MeshTopology.Points, 0);
-                meshFilter.mesh.colors = colors.ToArray();
+                gridMeshFilter.mesh.SetVertices(positions);
+                gridMeshFilter.mesh.SetIndices(indices.ToArray(), MeshTopology.Points, 0);
+                gridMeshFilter.mesh.colors = colors.ToArray();
                 // Graphics.DrawMeshNow(meshFilter.mesh, Matrix4x4.identity);
             }
             if (gridRenderMode == GridRenderMode.MeshQuads) {
-                meshFilter.mesh.SetVertices(positions);
-                meshFilter.mesh.SetIndices(indices.ToArray(), MeshTopology.Triangles, 0);
-                meshFilter.mesh.colors = colors.ToArray();
+                gridMeshFilter.mesh.SetVertices(positions);
+                gridMeshFilter.mesh.SetIndices(indices.ToArray(), MeshTopology.Triangles, 0);
+                gridMeshFilter.mesh.colors = colors.ToArray();
                 // Graphics.DrawMeshNow(meshFilter.mesh, Matrix4x4.identity);
             }
             else if (gridRenderMode == GridRenderMode.MeshLine) {
-                meshFilter.mesh.SetVertices(positions);
-                meshFilter.mesh.SetIndices(indices.ToArray(), MeshTopology.Lines, 0);
-                meshFilter.mesh.colors = colors.ToArray();
+                gridMeshFilter.mesh.SetVertices(positions);
+                gridMeshFilter.mesh.SetIndices(indices.ToArray(), MeshTopology.Lines, 0);
+                gridMeshFilter.mesh.colors = colors.ToArray();
                 // Graphics.DrawMeshNow(meshFilter.mesh, Matrix4x4.identity);
             }
 
         }
+
+        List<Vector3> framePositions = new List<Vector3>();
+        List<int> frameIndices = new List<int>();
+        List<Color> frameColors = new List<Color>();
+
+        float scaleX = GameRules.PixelsHorizontal / (2f * GameRules.PixelsPerUnit);
+        float scaleY = GameRules.PixelsVertical / (2f * GameRules.PixelsPerUnit);
+
+        Vector3 posA = new Vector3(-scaleX, -scaleY, 0f);
+        Vector3 posB = new Vector3(-scaleX, scaleY, 0f);
+        Vector3 posC = new Vector3(scaleX, -scaleY, 0f);
+        Vector3 posD = new Vector3(scaleX, scaleY, 0f);
+
+        framePositions.Add(posA); frameColors.Add(GameRules.Yellow);
+        framePositions.Add(posB); frameColors.Add(GameRules.Yellow);
+        framePositions.Add(posC); frameColors.Add(GameRules.Yellow);
+        framePositions.Add(posD); frameColors.Add(GameRules.Yellow);
+
+        frameIndices.Add(0); frameIndices.Add(1);
+        frameIndices.Add(0); frameIndices.Add(2);
+        frameIndices.Add(3); frameIndices.Add(1);
+        frameIndices.Add(3); frameIndices.Add(2);
+
+        frameMeshFilter.mesh.SetVertices(framePositions);
+        frameMeshFilter.mesh.SetIndices(frameIndices.ToArray(), MeshTopology.Lines, 0);
+        frameMeshFilter.mesh.colors = frameColors.ToArray();
+
     }
 
     private void Update() {
         if (buildGrid) {
-            meshFilter.mesh = new Mesh();
+            gridMeshFilter.mesh = new Mesh();
             grid = new Grid(gridMassPerPoint, massVelocityDamping,
                 verticalPrecision, horizontalPrecision,
                 springDisplacementFactor, springTaughtness,
@@ -270,11 +322,8 @@ public class Background : MonoBehaviour {
         }
     }
 
-    private void FixedUpdate() {
-        if (grid != null) {
-            grid.Update(Time.fixedDeltaTime);
-        }
-    }
+    //private void FixedUpdate() {
+    //}
 
     /* --- Methods --- */
 

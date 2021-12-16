@@ -19,6 +19,7 @@ public class Wormhole : MonoBehaviour {
     /* --- Components --- */
     private SpriteRenderer spriteRenderer;
     public WormholeRope rope;
+    public WormholeRope.RenderMode renderMode;
 
     /* --- Properties --- */
     public WormholeRotation rotation;
@@ -36,6 +37,7 @@ public class Wormhole : MonoBehaviour {
         rope.gameObject.SetActive(false);
 
         if (targetPoint != null) {
+            rope.renderMode = renderMode;
             rope.gameObject.SetActive(true);
             rope.startpoint = transform;
             rope.endpoint = targetPoint.transform;

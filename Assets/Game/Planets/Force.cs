@@ -51,7 +51,87 @@ public class Force : MonoBehaviour {
         }
 
         internalTicks += Time.deltaTime;
+    }
+
+    public static int Precision = 72;
+    private Vector3 origin;
+    private MeshFilter outerForceMesh;
+    public Material[] lineMats;
+
+    void FixedUpdate() {
+        //
+
         GetComponent<SpriteRenderer>().material.SetFloat("_OffsetY", 2f / 16f * Mathf.Sin(period * Mathf.PI * internalTicks));
+
+        if (outerForceMesh != null && origin == transform.position) {
+            return;
+        }
+
+        if (outerForceMesh == null) {
+            GameObject meshObject = new GameObject();
+            meshObject.transform.parent = transform;
+            meshObject.transform.localPosition = new Vector3(0f, 0f, -1f);
+            meshObject.AddComponent<MeshFilter>();
+
+            outerForceMesh = meshObject.GetComponent<MeshFilter>();
+            outerForceMesh.mesh = new Mesh();
+
+            meshObject.AddComponent<MeshRenderer>();
+            meshObject.GetComponent<MeshRenderer>().materials = lineMats;
+
+        }
+
+        List<Vector3> positions = new List<Vector3>();
+        // int[] indices = new int[2 * Precision];
+        List<int> indices = new List<int>();
+        List<Color> colors = new List<Color>();
+
+        positions.Add(radius * Vector2.right);
+        positions.Add(horizon * Vector2.right);
+
+        for (int i = 1; i < Precision; i++) {
+
+            // Makes a very cool wavy pattern.
+            // Vector3 outerPoint = (radius + (1f / 16f) * Mathf.Sin() * (Quaternion.Euler(0, 0, 360f * (float)i / Precision) * Vector2.right);
+
+            float a = (1f / 16f);
+            //float t = (i / Mathf.PI) * Time.time;
+            //float t = (i / Mathf.PI) + Time.time;
+            // float t = ((float)i / 100) * ((i / Mathf.PI) + Time.time);
+            float t = (i / Mathf.PI);
+
+            Vector3 outerPoint = (radius + a * Mathf.Sin(t)) * (Quaternion.Euler(0, 0, 360f * (float)i / Precision) * Vector2.right);
+            Vector3 innerPoint = (horizon + a * Mathf.Sin(t)) * (Quaternion.Euler(0, 0, 360f * (float)i / Precision) * Vector2.right);
+
+            positions.Add(outerPoint);
+            positions.Add(innerPoint);
+
+            indices.Add(2 * (i-1));
+            indices.Add(2 * i);
+
+            indices.Add(2 * (i - 1) + 1);
+            indices.Add(2 * i + 1);
+
+            colors.Add(GameRules.Red);
+            colors.Add(GameRules.Red);
+
+        }
+
+        indices.Add(2 * (Precision - 1));
+        indices.Add(0);
+
+        indices.Add(2 * (Precision - 1) + 1);
+        indices.Add(1);
+
+        colors.Add(GameRules.Red);
+        colors.Add(GameRules.Red);
+
+        outerForceMesh.mesh.SetVertices(positions);
+        outerForceMesh.mesh.SetIndices(indices.ToArray(), MeshTopology.Lines, 0);
+        outerForceMesh.mesh.colors = colors.ToArray();
+
+        origin = transform.position;
+
     }
 
     /* --- Methods --- */
