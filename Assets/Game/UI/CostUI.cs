@@ -16,6 +16,9 @@ public class CostUI : MonoBehaviour {
     public Text valueTextbox;
     public string valueText;
 
+    public bool getDataFromShop;
+    public Shop shop;
+
     void Start() {
 
         canvas = GetComponent<Canvas>();
@@ -23,7 +26,14 @@ public class CostUI : MonoBehaviour {
         canvas.pixelPerfect = true;
 
         // Assuming there is one on the parent.
-        cost = transform.parent.GetComponent<Cost>();
+        if (!getDataFromShop) {
+            cost = transform.parent.GetComponent<Cost>();
+        }
+        else {
+            cost = shop.costs[shop.currIndex];
+        }
+
+        // Assuming there is one on the parent.
         if (cost != null) {
 
             nameTextbox.text = cost.toolName;

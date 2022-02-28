@@ -8,6 +8,9 @@ Shader "Custom/PlanetShader"
 
         _OffsetX("Offset X", Float) = 0
         _OffsetY("Offset Y", Float) = 0
+
+        _ScaleX("Scale Y", Float) = 1
+        _ScaleY("Scale Y", Float) = 1
     }
 
     SubShader
@@ -51,19 +54,30 @@ Shader "Custom/PlanetShader"
                 return float3(vec.xyz) + float3(x, y, 0);
             };
 
+
+            float3 stretch(float3 vec, float x, float y)
+            {
+                float2x2 stretchMatrix = float2x2(x, 0, 0, y);
+                return float3(mul(stretchMatrix, vec.xy), vec.z).xyz;
+            };
+
             sampler2D _MainTex;
             float4 _MainTex_ST;
 
             float _OffsetX;
             float _OffsetY;
 
+            float _ScaleX;
+            float _ScaleY;
+
             v2f vert(appdata v)
             {
                 v2f o;
 
                 float3 offset_vertex = offset(v.vertex, _OffsetX, _OffsetY);
+                float3 stretched_offset_vertex = stretch(offset_vertex, _ScaleX, _ScaleY);
 
-                o.vertex = UnityObjectToClipPos(offset_vertex);
+                o.vertex = UnityObjectToClipPos(stretched_offset_vertex);
                 o.uv = v.uv;
                 return o;
             }

@@ -17,6 +17,9 @@ public class RevenueUI : MonoBehaviour {
     public Text valueTextbox;
     public string valueText;
 
+    public bool getDataFromBrochure;
+    public Brochure brochure;
+
     void Start() {
 
         canvas = GetComponent<Canvas>();
@@ -24,7 +27,12 @@ public class RevenueUI : MonoBehaviour {
         canvas.pixelPerfect = true;
 
         // Assuming there is one on the parent.
-        revenue = transform.parent.GetComponent<Revenue>();
+        if (!getDataFromBrochure) {
+            revenue = transform.parent.GetComponent<Revenue>();
+        }
+        else {
+            revenue = brochure.revenues[brochure.currIndex];
+        }
         // Assuming there is only one.
         shuttlePath = (ShuttlePath)GameObject.FindObjectOfType(typeof(ShuttlePath));
 
@@ -38,8 +46,15 @@ public class RevenueUI : MonoBehaviour {
 
     void Update() {
 
-        if (revenue != null && shuttlePath != null) {
+        if (getDataFromBrochure) {
+            revenue = brochure.revenues[brochure.currIndex];
+            shuttlePath = (ShuttlePath)GameObject.FindObjectOfType(typeof(ShuttlePath));
+        }
 
+        if (revenue != null && shuttlePath != null) {
+            nameTextbox.text = revenue.locationName;
+            typeTextbox.text = revenue.type.ToString();
+            
             int currRevenue = shuttlePath.revenueDict.ContainsKey(revenue) ? shuttlePath.revenueDict[revenue] : 0;
             valueText = currRevenue.ToString() + " / " + revenue.value.ToString();
             valueTextbox.text = valueText;

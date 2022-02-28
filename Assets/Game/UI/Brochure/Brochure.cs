@@ -7,7 +7,8 @@ using UnityEngine.UI;
 /// <summary>
 /// 
 /// </summary>
-// [RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(BoxCollider2D))]
 public class Brochure : MonoBehaviour {
 
     /* --- Components --- */
@@ -15,19 +16,60 @@ public class Brochure : MonoBehaviour {
     public Transform contentTransform;
 
     /* --- Properties --- */
+    //
+    public Revenue[] revenues;
+    public int currIndex;
+    //
+    public bool isActive = false;
+
+    public SpriteRenderer brochureBackground;
+    public SpriteRenderer brochureDisplay;
+
+    public Shop shop;
 
     /* --- Unity --- */
     private void Start() {
+
+        GetComponent<BoxCollider2D>().isTrigger = true;
         FindRevenues();
     }
 
     private void Update() {
 
+        brochureBackground.gameObject.SetActive(isActive);
+
+
+    }
+
+    private void OnMouseDown() {
+
+        OpenBrochure();
+
     }
 
     /* --- Methods --- */
     private void FindRevenues() {
-        Revenue[] revenues = (Revenue[])GameObject.FindObjectsOfType(typeof(Revenue));
+        revenues = (Revenue[])GameObject.FindObjectsOfType(typeof(Revenue));
+
+
+        // CreateUIElements();
+    }
+
+    private void OpenBrochure() {
+        isActive = !isActive;
+        if (isActive) {
+            shop.isActive = false;
+        }
+        SetBrochure(currIndex);
+
+    }
+
+    public void SetBrochure(int index) {
+        brochureDisplay.sprite = revenues[index].GetComponent<SpriteRenderer>().sprite;
+        currIndex = index;
+    }
+
+    private void CreateUIElements() {
         for (int i = 0; i < revenues.Length; i++) {
             // Destroy(shuttles[i].gameObject);
             float yOffset = revenueComponentObject.GetComponent<RectTransform>().sizeDelta.y;
@@ -40,5 +82,4 @@ public class Brochure : MonoBehaviour {
             newObject.gameObject.SetActive(true);
         }
     }
-
 }

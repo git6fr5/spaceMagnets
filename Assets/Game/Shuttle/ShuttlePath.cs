@@ -174,10 +174,16 @@ public class ShuttlePath : MonoBehaviour {
             if (!reachedStation) {
                 collision = ApplyForces(shuttleMasses[i]);
             }
-            if (collision) {
+            if (collision && firstCollisionIndex == -1) {
                 firstCollisionIndex = i;
                 clearPath = false;
             }
+
+            // if (firstCollisionIndex )
+        }
+
+        if (firstCollisionIndex != -1) {
+            reachedStation = false;
         }
 
         revenue = 0;
@@ -193,7 +199,7 @@ public class ShuttlePath : MonoBehaviour {
         }
     }
 
-    private void OnGUI() {
+    private void FixedUpdate() {
 
         List<Vector3> positions = new List<Vector3>();
         List<Color> colors = new List<Color>();

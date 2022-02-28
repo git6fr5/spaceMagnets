@@ -52,16 +52,17 @@ public class WormholeRope : MonoBehaviour {
         }
     }
 
-    void OnGUI() {
-        if (initialized) {
-            Render();
-        }
-    }
+    //void OnGUI() {
+    //    if (initialized) {
+    //      Render();
+    //    }
+    //}
 
     // Runs once every set time interval.
     void FixedUpdate() {
         if (initialized) {
             Simulation();
+            Render();
         }
     }
 

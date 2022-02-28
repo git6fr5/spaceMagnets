@@ -37,16 +37,23 @@ public class AsteroidWormhole : MonoBehaviour {
 
     }
 
+    void Update() {
+        path = transform.parent.GetComponent<AsteroidPath>().path;
+    }
+
     /* --- Coroutines --- */
     // Spawns shooting pixels on a looped timer.
     IEnumerator IEShootAsteroid() {
         yield return new WaitForSeconds(Random.Range(MinFireInterval, MaxFireInterval));
+
         for (int i = 0; i < batchSize; i++) {
             Asteroid newAsteroid = Instantiate(asteroidBase.gameObject, transform.position, Quaternion.identity, transform).GetComponent<Asteroid>();
             newAsteroid.gameObject.SetActive(true);
 
             // Offset the asteroid to outside the wormholes collision radius so that it doesn't immediately kill itself when it spawns.
-            newAsteroid.SetPath(path.pathPoints);
+            // path = transform.parent.GetComponent<AsteroidPath>().path;
+            print(path.pathPoints.Count);
+            newAsteroid.SetPath(transform.parent.GetComponent<AsteroidPath>().curve);
         }
         yield return StartCoroutine(IEShootAsteroid());
     }

@@ -66,7 +66,7 @@ public class Revenue : MonoBehaviour {
     private void Start() {
         if (Application.isPlaying) { // scuffed.
             GameObject uiObject = Instantiate(uiComponent.gameObject, transform.position, Quaternion.identity, transform);
-            uiObject.SetActive(true);
+            // uiObject.SetActive(true);
             uiObject.transform.position += new Vector3(0, -1.15f, 0f);
         }
     }

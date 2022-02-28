@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 
 /// <summary>
 /// Sets the parameters for the game.
@@ -92,6 +93,12 @@ public class GameRules : MonoBehaviour {
     private void OnDrawGizmos() {
         Gizmos.color = Yellow;
         Gizmos.DrawWireCube(transform.position, new Vector3(PixelsHorizontal / PixelsPerUnit, PixelsVertical / PixelsPerUnit, 1f));
+
+        //
+        PixelPerfectCamera pixelCam = Camera.main.GetComponent<PixelPerfectCamera>();
+        float pixelCamWidth = pixelCam.refResolutionX;
+        float pixelCamHeight = pixelCam.refResolutionY;
+        Gizmos.DrawWireCube(transform.position, new Vector3(pixelCamWidth / PixelsPerUnit, pixelCamHeight / PixelsPerUnit, 1f));
     }
 
 }

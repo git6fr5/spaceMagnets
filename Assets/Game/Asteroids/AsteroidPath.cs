@@ -21,6 +21,7 @@ public class AsteroidPath : MonoBehaviour
 
 		public void DeletePath() {
 			pathPoints.Clear();
+			// pathPoints = new List<Vector3>();
 		}
 
 		Vector3 BezierPathCalculation(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t) {
@@ -59,8 +60,12 @@ public class AsteroidPath : MonoBehaviour
 					pathPoints.Add(point);
 				}
 			}
+
 		}
 	}
+
+	public bool smoothenCurve;
+	public float stepDistance = 0f;
 
 	public static float Speed = 2f;
 	public static float StepDistance = 1f / 16f;
@@ -81,30 +86,88 @@ public class AsteroidPath : MonoBehaviour
 	}
 
 	// Update is called once per frame 
-	void OnGUI() {
+	void FixedUpdate() { // OnGUI() {
         GetPath();
-        // Render();
+        Render();
     }
 
+	private Vector3 origin;
+	public enum RenderMode {
+		Points,
+		MeshLine,
+		MeshPoints
+    }
+	public RenderMode renderMode;
+
 	private void Render() {
+
+		if (transform.position == origin) {
+			// return;
+        }
 
 		List<Vector3> positions = new List<Vector3>();
 		List<int> indices = new List<int>();
 		List<Color> colors = new List<Color>();
 
-		positions.Add(path.pathPoints[0] - transform.position);
+		positions.Add(curve[0] - transform.position);
+		positions.Add(curve[0] - transform.position);
+
+		colors.Add(Color.yellow);
 		colors.Add(Color.yellow);
 
-		for (int i = 1; i < (path.pathPoints.Count); i++) {
-			positions.Add(path.pathPoints[i] - transform.position);
-			indices.Add(i - 1);
-			indices.Add(i);
+		int count = curve.Count;
+
+		for (int i = 1; i < count; i++) {
+
+			Vector3 position = curve[i] - transform.position;
+			Vector3 direction = (curve[i] - curve[i-1]).normalized;
+			Vector3 offset = Asteroid.MaxRadius * (Quaternion.Euler(0, 0, 90f) * direction);
+			positions.Add(position + offset);
+			positions.Add(position - offset);
+
+			if (renderMode == RenderMode.MeshPoints) {
+				indices.Add(2 * i);
+				indices.Add(2 * i + 1);
+
+			}
+			else if (renderMode == RenderMode.MeshLine) {
+				indices.Add(2 * (i - 1));
+				indices.Add(2 * i);
+
+				indices.Add(2 * (i - 1) + 1);
+				indices.Add(2 * i + 1);
+			}
+
+			colors.Add(Color.yellow);
 			colors.Add(Color.yellow);
 		}
 
+
+
+		MeshTopology meshTopology = MeshTopology.Points;
+		if (renderMode == RenderMode.MeshPoints) {
+			meshTopology = MeshTopology.Points;
+		}
+		else if (renderMode == RenderMode.MeshLine) {
+            positions.Add(curve[count - 1] - transform.position);
+            positions.Add(curve[count - 1] - transform.position);
+
+            indices.Add(2 * (count - 1));
+            indices.Add(2 * count);
+
+            indices.Add(2 * (count - 1) + 1);
+            indices.Add(2 * count + 1);
+
+            colors.Add(Color.yellow);
+            colors.Add(Color.yellow);
+            meshTopology = MeshTopology.Lines;
+		}
+
 		meshFilter.mesh.SetVertices(positions.ToArray());
-		meshFilter.mesh.SetIndices(indices.ToArray(), MeshTopology.Lines, 0);
+		meshFilter.mesh.SetIndices(indices.ToArray(), meshTopology, 0);
 		meshFilter.mesh.colors = colors.ToArray();
+
+		origin = transform.position;
 	}
 
 	void OnDrawGizmos() {
@@ -122,7 +185,7 @@ public class AsteroidPath : MonoBehaviour
 		}
 	}
 
-
+	public List<Vector3> curve = new List<Vector3>();
 	private void GetPath() {
 		List<Vector3> nodePositions = new List<Vector3>();
 		for (int i = 0; i < nodes.Length; i++) {
@@ -133,6 +196,37 @@ public class AsteroidPath : MonoBehaviour
 		}
 		path.DeletePath();
 		path.CreateCurve(nodePositions);
+		curve = path.pathPoints;
+		if (smoothenCurve) {
+			curve = SmoothenCurve(curve);
+		}
+	}
+
+	public List<Vector3> SmoothenCurve(List<Vector3> curve) {
+
+		// float stepDistance = ShuttlePath.StepDistance;
+		float distance = 0;
+		List<Vector3> smoothCurve = new List<Vector3>();
+		smoothCurve.Add(curve[0]);
+
+		for (int i = 1; i < curve.Count; i++) {
+
+			distance += ((Vector2)curve[i] - (Vector2)curve[i - 1]).magnitude;
+			if (distance > stepDistance) {
+
+				smoothCurve.Add(curve[i]);
+				distance -= stepDistance;
+
+			}
+
+		}
+
+		if (!smoothCurve.Contains(curve[curve.Count - 1])) {
+			smoothCurve.Add(smoothCurve[curve.Count - 1]);
+		}
+
+		return smoothCurve;
+
 	}
 
 

@@ -49,23 +49,29 @@ public class Force : MonoBehaviour {
         if (!pulse) {
             ApplyForces();
         }
-
-        internalTicks += Time.deltaTime;
     }
 
     public static int Precision = 72;
     private Vector3 origin;
     private MeshFilter outerForceMesh;
     public Material[] lineMats;
+    public bool drawInnerCircle;
+    public int offsetMaxPixels;
 
-    void FixedUpdate() {
-        //
+    private void FixedUpdate() {
+        internalTicks += Time.fixedDeltaTime;
+        DrawSprite();
+        DrawAreaOfEffect();
+        origin = transform.position;
+    }
 
-        GetComponent<SpriteRenderer>().material.SetFloat("_OffsetY", 2f / 16f * Mathf.Sin(period * Mathf.PI * internalTicks));
+    private void DrawSprite() {
+        float pixels = ((float)offsetMaxPixels);
+        GetComponent<SpriteRenderer>().material.SetFloat("_OffsetY", pixels / 16f * Mathf.Sin(period * Mathf.PI * internalTicks));
+        GetComponent<SpriteRenderer>().material.SetFloat("_ScaleX", Mathf.Sin(period * Mathf.PI * internalTicks));
+    }
 
-        if (outerForceMesh != null && origin == transform.position) {
-            return;
-        }
+    private void DrawAreaOfEffect() {
 
         if (outerForceMesh == null) {
             GameObject meshObject = new GameObject();
@@ -82,7 +88,6 @@ public class Force : MonoBehaviour {
         }
 
         List<Vector3> positions = new List<Vector3>();
-        // int[] indices = new int[2 * Precision];
         List<int> indices = new List<int>();
         List<Color> colors = new List<Color>();
 
@@ -95,10 +100,10 @@ public class Force : MonoBehaviour {
             // Vector3 outerPoint = (radius + (1f / 16f) * Mathf.Sin() * (Quaternion.Euler(0, 0, 360f * (float)i / Precision) * Vector2.right);
 
             float a = (1f / 16f);
-            //float t = (i / Mathf.PI) * Time.time;
+            float t = (i / Mathf.PI) * Time.time;
             //float t = (i / Mathf.PI) + Time.time;
             // float t = ((float)i / 100) * ((i / Mathf.PI) + Time.time);
-            float t = (i / Mathf.PI);
+            // float t = (i / Mathf.PI);
 
             Vector3 outerPoint = (radius + a * Mathf.Sin(t)) * (Quaternion.Euler(0, 0, 360f * (float)i / Precision) * Vector2.right);
             Vector3 innerPoint = (horizon + a * Mathf.Sin(t)) * (Quaternion.Euler(0, 0, 360f * (float)i / Precision) * Vector2.right);
@@ -106,14 +111,19 @@ public class Force : MonoBehaviour {
             positions.Add(outerPoint);
             positions.Add(innerPoint);
 
-            indices.Add(2 * (i-1));
+            indices.Add(2 * (i - 1));
             indices.Add(2 * i);
 
             indices.Add(2 * (i - 1) + 1);
             indices.Add(2 * i + 1);
 
             colors.Add(GameRules.Red);
-            colors.Add(GameRules.Red);
+            if (drawInnerCircle) {
+                colors.Add(GameRules.Red);
+            }
+            else {
+                colors.Add(new Color(0, 0, 0, 0));
+            }
 
         }
 
@@ -129,9 +139,6 @@ public class Force : MonoBehaviour {
         outerForceMesh.mesh.SetVertices(positions);
         outerForceMesh.mesh.SetIndices(indices.ToArray(), MeshTopology.Lines, 0);
         outerForceMesh.mesh.colors = colors.ToArray();
-
-        origin = transform.position;
-
     }
 
     /* --- Methods --- */
