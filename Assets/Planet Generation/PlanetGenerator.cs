@@ -30,7 +30,7 @@ public class PlanetGenerator : MonoBehaviour {
     public float radius = 0.5f;
     public float seaLevel = .4f;
     public float heightRange = 0.1f;
-    [Range(0, 8)] public int subdivisions;
+    [Range(0, 20)] public int subdivisions;
 
     //Height/Noise mapping settings
     [Space(5), Header("Height Map Settings")]
